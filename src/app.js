@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const cors = require('cors')
 const helmet = require('helmet')
 const { NODE_ENV } = require('./config')
+const tickets = require('./tickets')
 
 const app = express()
 
@@ -17,6 +18,10 @@ app.use(helmet())
 
 app.get('/', (req, res) => {
     res.send('Hello, boilerplate!')
+})
+
+app.get('/tickets', (req, res) => {
+    res.json(tickets)
 })
 
 app.use((error, req, res, next) => {
