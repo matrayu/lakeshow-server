@@ -5,6 +5,7 @@ CREATE TABLE tickets (
   seat_row INT NOT NULL,
   seats INT [] NOT NULL,
   quantity INT NOT NULL,
-  singles_allowed BOOLEAN NOT NULL,
+  singles_allowed BOOLEAN DEFAULT FALSE NOT NULL,
+  available BOOLEAN DEFAULT TRUE NOT NULL ,
   date_created TIMESTAMP DEFAULT now() NOT NULL
 );
