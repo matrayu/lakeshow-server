@@ -41,13 +41,24 @@ describe('Tickets Endpoints', function() {
         )
       )
 
-      it('responds with 200 and all of the tickets', () => {
+      /* it('responds with 200 and all of the tickets', () => {
         const expectedTickets = testTickets.map(ticket =>
           helpers.makeExpectedTicket(ticket, testTeams, testGames)
         )
         return supertest(app)
           .get('/api/tickets')
           .expect(200, expectedTickets)
+      }) */
+
+      it('responds with 200 and all available tickets', () => {
+        const expectedTickets = testTickets.map(ticket =>
+            helpers.makeExpectedTicket(ticket, testTeams, testGames)
+        )
+        const availableTickets = expectedTickets.filter(ticket => ticket.available === true)
+
+        return supertest(app)
+          .get('/api/tickets')
+          .expect(200, availableTickets)
       })
     })
 

@@ -17,7 +17,8 @@ const TicketsService = {
                 'local_time',
                 'venue',
                 'team_name',
-                'logo'
+                'logo',
+                'available'
             )
             .where('tickets.available', true)
             .leftJoin(

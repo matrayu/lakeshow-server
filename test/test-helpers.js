@@ -160,7 +160,7 @@ function makeTicketsArray() {
         seats: [3,4],
         quantity: 2,
         singles_allowed: false,
-        available: true,
+        available: false,
         date_created: '2029-01-22T16:28:32.615Z',
         sale_id: null,
     },
@@ -243,7 +243,8 @@ function makeExpectedTicket(ticket, teams, games) {
     local_time: game.local_time,
     venue: game.venue,
     team_name: team.team_name,
-    logo: team.logo
+    logo: team.logo,
+    available: ticket.available
   }
 }
 
