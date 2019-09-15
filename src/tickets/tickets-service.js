@@ -17,6 +17,12 @@ const TicketsService = {
                 'games.away_team',
                 'teams.id',
             )
+    },
+
+    getById(db, id) {
+        return TicketsService.getAllTickets(db)
+            .where('tickets.id', id)
+            .first()
     }
 }
 
