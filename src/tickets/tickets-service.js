@@ -5,7 +5,20 @@ const TicketsService = {
     getAllTickets(db) {
         return db
             .from('tickets')
-            .select('*')
+            .select(
+                'tickets.id',
+                'game_id',
+                'section',
+                'seat_row',
+                'seats',
+                'quantity',
+                'singles_allowed',
+                'local_date',
+                'local_time',
+                'venue',
+                'team_name',
+                'logo'
+            )
             .where('tickets.available', true)
             .leftJoin(
                 'games',

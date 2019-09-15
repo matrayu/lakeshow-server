@@ -78,168 +78,172 @@ function makeUsersArray() {
   ]
 }
 
-function makeTicketsArray(games) {
+function makeTicketsArray() {
   return [
     {
         id: 1,
-        game_id: games[0].id,
+        game_id: 1,
         section: '114',
         seat_row: '18W',
         seats: [3,4],
         quantity: 2,
-        singles_allowed: FALSE,
-        available: TRUE,
+        singles_allowed: false,
+        available: true,
         date_created: '2029-01-22T16:28:32.615Z',
-        sale_id: '',
+        sale_id: null,
     },
     {
         id: 2,
-        game_id: games[1].id,
+        game_id: 2,
         section: '114',
         seat_row: '18W',
         seats: [3,4],
         quantity: 2,
-        singles_allowed: FALSE,
-        available: TRUE,
+        singles_allowed: false,
+        available: true,
         date_created: '2029-01-22T16:28:32.615Z',
-        sale_id: '',
+        sale_id: null,
     },
     {
         id: 3,
-        game_id: games[2].id,
+        game_id: 3,
         section: '114',
         seat_row: '18W',
         seats: [3,4],
         quantity: 2,
-        singles_allowed: FALSE,
-        available: TRUE,
+        singles_allowed: false,
+        available: true,
         date_created: '2029-01-22T16:28:32.615Z',
-        sale_id: '',
+        sale_id: null,
     },
     {
         id: 4,
-        game_id: games[3].id,
+        game_id: 4,
         section: '114',
         seat_row: '18W',
         seats: [3,4],
         quantity: 2,
-        singles_allowed: FALSE,
-        available: TRUE,
+        singles_allowed: false,
+        available: true,
         date_created: '2029-01-22T16:28:32.615Z',
-        sale_id: '',
+        sale_id: null,
     },
     {
         id: 5,
-        game_id: games[4].id,
+        game_id: 5,
         section: '114',
         seat_row: '18W',
         seats: [3,4],
         quantity: 2,
-        singles_allowed: FALSE,
-        available: TRUE,
+        singles_allowed: false,
+        available: true,
         date_created: '2029-01-22T16:28:32.615Z',
-        sale_id: '',
+        sale_id: null,
     },
     {
         id: 6,
-        game_id: games[5].id,
+        game_id: 6,
         section: '114',
         seat_row: '18W',
         seats: [3,4],
         quantity: 2,
-        singles_allowed: FALSE,
-        available: TRUE,
+        singles_allowed: false,
+        available: true,
         date_created: '2029-01-22T16:28:32.615Z',
-        sale_id: '',
+        sale_id: null,
     },
     {
         id: 7,
-        game_id: games[6].id,
+        game_id: 7,
         section: '114',
         seat_row: '18W',
         seats: [3,4],
         quantity: 2,
-        singles_allowed: FALSE,
-        available: TRUE,
+        singles_allowed: false,
+        available: true,
         date_created: '2029-01-22T16:28:32.615Z',
-        sale_id: '',
+        sale_id: null,
     },
   ]
 }
 
-function makeGamesArray(teams) {
+function makeGamesArray() {
   return [
     {
         id: 1,
-        home_team: teams[6].team_name,
-        away_team: teams[0].team_name,
-        local_date: '2019-10-25',
+        home_team: 7,
+        away_team: 1,
+        local_date: '2019-10-25T00:00:00.000Z',
         local_time: '18:30:00',
         venue: 'STAPLES Center'
     },
     {
         id: 2,
-        home_team: teams[6].team_name,
-        away_team: teams[1].team_name,
-        local_date: '2019-10-28',
+        home_team: 7,
+        away_team: 1,
+        local_date: '2019-10-28T00:00:00.000Z',
         local_time: '18:30:00',
         venue: 'STAPLES Center'
     },
     {
         id: 3,
-        home_team: teams[6].team_name,
-        away_team: teams[2].team_name,
-        local_date: '2019-11-25',
+        home_team: 7,
+        away_team: 2,
+        local_date: '2019-11-25T00:00:00.000Z',
         local_time: '18:30:00',
         venue: 'STAPLES Center'
     },
     {
         id: 4,
-        home_team: teams[6].team_name,
-        away_team: teams[3].team_name,
-        local_date: '2019-12-25',
+        home_team: 7,
+        away_team: 3,
+        local_date: '2019-12-25T00:00:00.000Z',
         local_time: '18:30:00',
         venue: 'STAPLES Center'
     },
     {
         id: 5,
-        home_team: teams[6].team_name,
-        away_team: teams[4].team_name,
-        local_date: '2020-01-01',
+        home_team: 7,
+        away_team: 4,
+        local_date: '2020-01-01T00:00:00.000Z',
         local_time: '18:30:00',
         venue: 'STAPLES Center'
     },
     {
         id: 6,
-        home_team: teams[6].team_name,
-        away_team: teams[5].team_name,
-        local_date: '2020-01-13',
+        home_team: 7,
+        away_team: 5,
+        local_date: '2020-01-13T00:00:00.000Z',
         local_time: '18:30:00',
         venue: 'STAPLES Center'
     },
     {
         id: 7,
-        home_team: teams[6].team_name,
-        away_team: teams[1].team_name,
-        local_date: '2020-01-15',
+        home_team: 7,
+        away_team: 1,
+        local_date: '2020-01-15T00:00:00.000Z',
         local_time: '18:30:00',
         venue: 'STAPLES Center'
     },
   ];
 }
 
-function makeExpectedTicket(tickets, ticket_id) {
-  const ticket = tickets.find(ticket => ticket.id === ticket_id)
-
+function makeExpectedTicket(ticket, teams, games) {
+  const game = games.find(game => game.id === ticket.game_id)
+  const team = teams.find(team => team.id === game.away_team)
   return {
-    id: 1,
-        game_id: 4,
-        section: '114',
-        seat_row: '18W',
-        seats: [3,4],
-        quantity: 2,
-        singles_allowed: FALSE,
-        available: TRUE
+    id: ticket.id,
+    game_id: ticket.game_id,
+    section: ticket.section,
+    seat_row: ticket.seat_row,
+    seats: ticket.seats,
+    quantity: ticket.quantity,
+    singles_allowed: ticket.singles_allowed,
+    local_date: game.local_date,
+    local_time: game.local_time,
+    venue: game.venue,
+    team_name: team.team_name,
+    logo: team.logo
   }
 }
 
@@ -265,19 +269,36 @@ function makeExpectedTicket(tickets, ticket_id) {
 
 function makeFixtures() {
   const testUsers = makeUsersArray()
-  return { testUsers }
+  const testTeams = makeTeamsArray()
+  const testGames = makeGamesArray()
+  const testTickets = makeTicketsArray()
+  return { testUsers, testTeams, testGames, testTickets }
 }
 
 function cleanTables(db) {
   return db.raw(
     `TRUNCATE
-      tickets
+      teams
       RESTART IDENTITY CASCADE`
   )
   .then(() => {
     return db.raw(
       `TRUNCATE
+        games
+        RESTART IDENTITY CASCADE`
+    )
+  })
+  .then(() => {
+    return db.raw(
+      `TRUNCATE
         users
+        RESTART IDENTITY CASCADE`
+    )
+  })
+  .then(() => {
+    return db.raw(
+      `TRUNCATE
+        tickets
         RESTART IDENTITY CASCADE`
     )
   })
@@ -301,7 +322,7 @@ function seedUsers(db, users) {
 }
 
 function seedTeams(db, teams) {
-    return db
+  return db
     .into('teams')
     .insert(teams)
     .then(() => 
@@ -313,13 +334,37 @@ function seedTeams(db, teams) {
     )
 }
 
-function seedTicketsTables(db, tickets) {
+function seedGames(db, games) {
+  return db
+    .into('games')
+    .insert(games)
+    .then(() => 
+      // update the auto sequence to stay in sync
+      db.raw(
+        `SELECT setval('games_id_seq', ?)`,
+        [games[games.length - 1].id]
+      )
+    )
+}
+
+function seedTickets(db, tickets, teams, games) {
   // use a transaction to group the queries and auto rollback on any failure
   return db.transaction(async trx => {
-    await seedUsers(trx, users)
+    await seedTeams(trx, teams)
+    await seedGames(trx, games)
     await trx
       .into('tickets')
       .insert(tickets)
+      .leftJoin(
+        'games',
+        'tickets.game_id',
+        'games.id'
+      )
+      .leftJoin(
+        'teams',
+        'games.away_team',
+        'teams.id'
+      )
     // update the auto sequence to match the forced id values
     await trx
       .raw(
@@ -361,9 +406,10 @@ module.exports = {
 
   makeFixtures,
   cleanTables,
-  seedTicketsTables,
+  seedTickets,
   /* seedMaliciousThing, */
   seedTeams,
+  seedGames,
   makeAuthHeader,
   seedUsers,
   generateHash
