@@ -1,7 +1,7 @@
 {
   "name": "lakeshow-server",
   "version": "0.0.1",
-  "description": "",
+  "description": "NodeJS project for Lakeshow Tix app",
   "main": "index.js",
   "scripts": {
     "test": "mocha --require test/setup.js",
@@ -12,7 +12,7 @@
     "migrate": "postgrator --config postgrator-config.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "matrayu",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -25,6 +25,7 @@
     "morgan": "^1.9.1",
     "pg": "^7.12.1",
     "treeize": "^2.1.2",
+    "winston": "^3.2.1",
     "xss": "^1.0.6"
   },
   "devDependencies": {
