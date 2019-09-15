@@ -2,10 +2,10 @@ CREATE TABLE sales (
   id SERIAL PRIMARY KEY,
   user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL,
   tickets_id INTEGER REFERENCES tickets(id) ON DELETE CASCADE NOT NULL,
-  date_created TIMESTAMP NOT NULL DEFAULT now(),
+  date_created TIMESTAMP NOT NULL DEFAULT now()
 );
 
 ALTER TABLE tickets
-    ADD_COLUMN
+    ADD COLUMN
         sale_id INTEGER REFERENCES sales(id)
         ON DELETE SET NULL;

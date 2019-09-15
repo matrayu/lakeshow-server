@@ -1,8 +1,8 @@
 CREATE TABLE tickets (
   id SERIAL PRIMARY KEY,
-  game INTEGER REFERENCES games(id) ON DELETE CASCADE NOT NULL,
-  section INT NOT NULL,
-  seat_row INT NOT NULL,
+  game_id INTEGER REFERENCES games(id) ON DELETE CASCADE NOT NULL,
+  section TEXT NOT NULL,
+  seat_row TEXT NOT NULL,
   seats INT [] NOT NULL,
   quantity INT NOT NULL,
   singles_allowed BOOLEAN DEFAULT FALSE NOT NULL,
