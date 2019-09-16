@@ -40,7 +40,7 @@ describe('Auth Endpoints', function() {
             password: testUser.password
         }
 
-        it(`responds with 400 error when '${field}' is misssing`, () => {
+        it(`responds with 400 error when '${field}' is missing`, () => {
             delete loginAttemptBody[field]
 
             return supertest(app)
