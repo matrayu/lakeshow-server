@@ -16,20 +16,26 @@ usersRouter
                 })
         
         const passwordError = UserService.validatePassword(password)
+        const db = req.app.get('db')
 
         if (passwordError)
                 return res.status(400).json({ error: passwordError })
 
-        UserService.hasUserWithUserName(
-            req.app.get('db'),
-            username
-        )
+        UserService.hasUserWithUserName(db,username)
         .then(hasUserWithUserName => {
-            if (hasUserWithUserName)
+            if (hasUserWithUserName) {
                 return res.status(400).json({
                     error: `Username already taken`
                 })
-            return UserService.hashPassword(password)
+            }
+            return UserService.hasUserWithEmail(db, email)
+            .then(hasUserWithEmail => {
+                if (hasUserWithEmail) {
+                    return res.status(400).json({
+                        error: `Email has already been registered`
+                    }) 
+                }    
+                return UserService.hashPassword(password)
                 .then(hashedPassword => {
                     const newUser = {
                         username,
@@ -38,11 +44,7 @@ usersRouter
                         email,
                         date_created: 'now()'
                     }
-
-                    return UserService.insertUser(
-                        req.app.get('db'),
-                        newUser
-                    )
+                    return UserService.insertUser(db,newUser)
                     .then(user => {
                         res
                             .status(201)
@@ -50,6 +52,7 @@ usersRouter
                             .json(UserService.serializeUser(user))
                     })
                 })
+            })
         })
         .catch(next)
     })

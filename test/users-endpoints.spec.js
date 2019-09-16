@@ -132,6 +132,20 @@ describe('Users Endpoints', function() {
                 .send(duplicateUser)
                 .expect(400, { error: `Username already taken` })
             })
+
+            it(`responds 400 'Email already registered' when email isn't unique`, () => {
+                const duplicateUser = {
+                    username: 'test username',
+                    password: '11AAaa!!',
+                    full_name: 'test full_name',
+                    email: testUser.email
+                }
+  
+                return supertest(app)
+                  .post('/api/users')
+                  .send(duplicateUser)
+                  .expect(400, { error: `Email has already been registered` })
+              })
           })
           context('Happy Path', () => {
               it(`responds 201, serialized user, storing bcrypted password`, () => {
