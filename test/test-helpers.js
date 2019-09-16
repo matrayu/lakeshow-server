@@ -45,7 +45,7 @@ function makeUsersArray() {
   return [
     {
       id: 1,
-      user_name: 'test-user-1',
+      username: 'test-user-1',
       full_name: 'Test user 1',
       password: 'password',
       email: 'testuser1@email.com',
@@ -53,7 +53,7 @@ function makeUsersArray() {
     },
     {
       id: 2,
-      user_name: 'test-user-2',
+      username: 'test-user-2',
       full_name: 'Test user 2',
       password: 'password',
       email: 'testuser2@email.com',
@@ -61,7 +61,7 @@ function makeUsersArray() {
     },
     {
       id: 3,
-      user_name: 'test-user-3',
+      username: 'test-user-3',
       full_name: 'Test user 3',
       password: 'password',
       email: 'testuser3@email.com',
@@ -69,7 +69,7 @@ function makeUsersArray() {
     },
     {
       id: 4,
-      user_name: 'test-user-4',
+      username: 'test-user-4',
       full_name: 'Test user 4',
       password: 'password',
       email: 'testuser4@email.com',
@@ -386,7 +386,7 @@ function seedTickets(db, tickets, teams, games) {
 
 function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
   const token = jwt.sign({ user_id: user.id }, secret, {
-    subject: user.user_name,
+    subject: user.username,
     algorithm: 'HS256',
   })
   return `Bearer ${token}`

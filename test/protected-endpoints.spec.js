@@ -51,7 +51,7 @@ describe('Protected Endpoints', function() {
             })
 
             it(`responds 401 'Unauthorized request' when invalid user`, () => {
-              const userInvalid = { user_name: 'not-user', password: 'exists' }
+              const userInvalid = { username: 'not-user', password: 'exists' }
               return endpoint.method
                 .set('Authorization', helpers.makeAuthHeader(userInvalid))
                 .expect(401, { error: 'Unauthorized request' })

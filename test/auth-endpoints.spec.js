@@ -32,11 +32,11 @@ describe('Auth Endpoints', function() {
         )
     )
 
-    const requiredFields = ['user_name', 'password']
+    const requiredFields = ['username', 'password']
 
     requiredFields.forEach(field => {
         const loginAttemptBody = {
-            user_name: testUser.user_name,
+            username: testUser.username,
             password: testUser.password
         }
 
@@ -49,32 +49,32 @@ describe('Auth Endpoints', function() {
               .expect(400, { error: `Missing '${field}' in request body` })
         })
 
-        it(`responds with 400 error 'invalid user_name or password' when bad user_name`, () => {
-          const userInvalidUser = { user_name: 'user-not', password: 'existy' }
+        it(`responds with 400 error 'invalid username or password' when bad username`, () => {
+          const userInvalidUser = { username: 'user-not', password: 'existy' }
 
           return supertest(app)
             .post('/api/auth/login')
             .send(userInvalidUser)
-            .expect(400, { error: `Incorrect user_name or password` })
+            .expect(400, { error: `Incorrect username or password` })
         })
 
-        it(`responds with 400 error 'invalid user_name or password' when bad password`, () => {
-          const userInvalidPassword = { user_name: testUser.user_name, password: 'incorrect' }
+        it(`responds with 400 error 'invalid username or password' when bad password`, () => {
+          const userInvalidPassword = { username: testUser.username, password: 'incorrect' }
 
           return supertest(app)
             .post('/api/auth/login')
             .send(userInvalidPassword)
-            .expect(400, { error: `Incorrect user_name or password` })
+            .expect(400, { error: `Incorrect username or password` })
         })
 
         it(`responds with 200 and JWT auth token using secret when valid credentials`, () => {
           const userValidCreds = {
-            user_name: testUser.user_name,
+            username: testUser.username,
             password: testUser.password,
           }
 
           const payload = { user_id: testUser.id }
-          const subject = testUser.user_name
+          const subject = testUser.username
 
           const expectedToken = jwt.sign(
             payload,
@@ -103,7 +103,7 @@ describe('Auth Endpoints', function() {
         { user_id: testUser.id },
         process.env.JWT_SECRET,
         {
-          subject: testUser.user_name,
+          subject: testUser.username,
           expiresIn: process.env.JWT_EXPIRY,
           algorithm: 'HS256',
         }

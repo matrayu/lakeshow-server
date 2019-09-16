@@ -36,7 +36,7 @@ VALUES
   (7, 2, '2020-01-13', '18:30:00', 'STAPLES Center');
 
 
-INSERT INTO users (user_name, full_name, email, password)
+INSERT INTO users (username, full_name, email, password)
 VALUES
   ('dunder', 'Dunder Mifflin', 'dunder@email.com', '$2a$12$AmM8ZuvNAXf5FKYtyQ1xCus6Nm.YPbPazD3IAibAwZQWxdR7znkvW'),
   ('b.deboop', 'Bodeep Deboop', 'deboop@email.com', '$2a$12$LwaEMhzGB1wQLmXmZch57e.t.N8YFZR49Ax4oHD1nGAYLxWJ5e0zK'),

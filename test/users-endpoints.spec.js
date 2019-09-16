@@ -32,11 +32,11 @@ describe('Users Endpoints', function() {
             )
         )
 
-        const requiredFields = ['user_name', 'password', 'full_name', 'email']
+        const requiredFields = ['username', 'password', 'full_name', 'email']
 
         requiredFields.forEach(field => {
             const registerAttemptBody = {
-                user_name: 'test user_name',
+                username: 'test username',
                 password: 'test password',
                 full_name: 'test full_name',
                 email: 'test@email.com',
@@ -56,7 +56,7 @@ describe('Users Endpoints', function() {
 
             it(`responds 400 'Password must be longer than 8 characters' when short password`, () => {
                 const userShortPassword = {
-                    user_name: 'test user_name',
+                    username: 'test username',
                     password: '1234567',
                     full_name: 'test full_name',
                     email: 'test@email.com'
@@ -69,7 +69,7 @@ describe('Users Endpoints', function() {
       
             it(`responds 400 'Password must be less than 72 characters' when long password`, () => {
               const userLongPassword = {
-                  user_name: 'test user_name',
+                  username: 'test username',
                   password: '*'.repeat(73),
                   full_name: 'test full_name',
                   email: 'test@email.com'
@@ -82,7 +82,7 @@ describe('Users Endpoints', function() {
       
             it(`responds 400 error when password starts with spaces`, () => {
               const userPasswordStartsWithSpace = {
-                  user_name: 'test user_name',
+                  username: 'test username',
                   password: ' 12@adsUiujOJ',
                   full_name: 'test full_name',
                   email: 'test@email.com'
@@ -95,7 +95,7 @@ describe('Users Endpoints', function() {
       
             it(`responds 400 error when password ends with spaces`, () => {
               const userPasswordEndsWithSpace = {
-                  user_name: 'test user_name',
+                  username: 'test username',
                   password: '12@adsUiujOJ ',
                   full_name: 'test full_name',
                   email: 'test@email.com'
@@ -108,7 +108,7 @@ describe('Users Endpoints', function() {
       
             it(`responds 400 error when password isn't complex enough`, () => {
               const userPasswordNotComplex = {
-                  user_name: 'test user_name',
+                  username: 'test username',
                   password: '11AAaabb',
                   full_name: 'test full_name',
                   email: 'test@email.com'
@@ -119,9 +119,9 @@ describe('Users Endpoints', function() {
                 .expect(400, { error: `Password must contain 1 upper case, lower case, number and special character` })
             })
       
-            it(`responds 400 'User name already taken' when user_name isn't unique`, () => {
+            it(`responds 400 'User name already taken' when username isn't unique`, () => {
               const duplicateUser = {
-                  user_name: testUser.user_name,
+                  username: testUser.username,
                   password: '11AAaa!!',
                   full_name: 'test full_name',
                   email: 'test@email.com'
@@ -136,7 +136,7 @@ describe('Users Endpoints', function() {
           context('Happy Path', () => {
               it(`responds 201, serialized user, storing bcrypted password`, () => {
                   const newUser = {
-                      user_name: 'test user_name',
+                      username: 'test username',
                       password: '11AAaa!!',
                       full_name: 'test full_name',
                       email: 'test@email.com'
@@ -147,7 +147,7 @@ describe('Users Endpoints', function() {
                       .expect(201)
                       .expect(res => {
                           expect(res.body).to.have.property('id')
-                          expect(res.body.user_name).to.eql(newUser.user_name)
+                          expect(res.body.username).to.eql(newUser.username)
                           expect(res.body.full_name).to.eql(newUser.full_name)
                           expect(res.body).not.to.have.property('password')
                           expect(res.headers.location).to.eql(`/api/users/${res.body.id}`)
@@ -162,7 +162,7 @@ describe('Users Endpoints', function() {
                               .where({ id: res.body.id })
                               .first()
                               .then(row => {
-                                  expect(row.user_name).to.eql(newUser.user_name)
+                                  expect(row.username).to.eql(newUser.username)
                                   expect(row.full_name).to.eql(newUser.full_name)
                                   const expectedDate = new Date().toLocaleString('en', { timeZone: 'UTC' })
                                   const actualDate = new Date(row.date_created).toLocaleString()
