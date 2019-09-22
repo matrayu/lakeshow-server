@@ -22,7 +22,8 @@ TRUNCATE
 
 INSERT INTO users (gender, first_name, last_name, username, password, email, dob, phone_number, visits)
 VALUES
-  ('male', 'Mike', 'Dello', 'mdello', 'tester123', 'mdello@aol.com','1980-05-04', '3103429876', 1);
+  ('male', 'Mike', 'Dello', 'mdello', 'tester123', 'mdello@aol.com','1980-05-04', '3103429876', 1),
+  ('male', 'Fred', 'Banks', 'fbanks', 'tester123', 'fbanks@aol.com','1999-09-18', '4243258469', 1);
 
 
 INSERT INTO teams (team_name, logo)
@@ -33,24 +34,26 @@ VALUES
 INSERT INTO games (team_id_home, team_id_away, local_date, local_time, venue)
 VALUES
   (1, 2, '2019-10-25', '18:30:00', 'STAPLES Center'),
-  (2, 1, '2019-10-27', '18:00:00', 'STAPLES Center');
+  (2, 1, '2019-10-27', '18:00:00', 'STAPLES Center'),
+  (1, 2, '2019-10-31', '18:30:00', 'STAPLES Center'),
+  (1, 1, '2019-11-15', '18:00:00', 'STAPLES Center');
 
-INSERT INTO product_groups (product_group_id)
-VALUES
-  (1),
-  (2);
 
-INSERT INTO product_images (product_group_id, product_image_path, product_image_details)
+INSERT INTO products (game_id, section, seat_row, seat, quantity, purchase_price_ea, list_price_ea, stubhub_price_ea, ticketmaster_price_ea, ebay_price_ea, discount_available, singles_allowed, available)
 VALUES
-  (1, 'www.imagepath6.com', 'these are the details for ticket grouping 6'),
-  (2, 'www.imagepath7.com', 'these are the details for ticket grouping 7');
+  (1, '114', '18W', '{3,4}', 2, 150.00, 300.00, 600.00, 780.00, 450.00, TRUE, FALSE, TRUE),
+  (2, '114', '18W', '{3,4}', 1, 200.00, 320.00, 600.00, 700.00, 450.00, TRUE, FALSE, TRUE),
+  (3, '114', '18W', '{3,4}', 1, 400.00, 500.00, 600.00, 790.00, 450.00, TRUE, FALSE, TRUE),
+  (4, '114', '18W', '{3,4}', 1, 425.00, 500.00, 600.00, 800.00, 450.00, TRUE, FALSE, TRUE);
 
-INSERT INTO products (game_id, product_group_id, section, seat_row, seat, quantity, purchase_price, list_price, stubhub_price, ticketmaster_price, ebay_price, discount_available, singles_allowed, available)
+
+INSERT INTO product_images (product_id, product_image_path, product_image_details)
 VALUES
-  (1, 1, '114', '18W', '3', 1, 150.00, 300.00, 400.00, 400.00, 450.00, TRUE, FALSE, TRUE),
-  (1, 1, '114', '18W', '4', 1, 150.00, 300.00, 400.00, 400.00, 450.00, TRUE, FALSE, TRUE),
-  (2, 2, '114', '18W', '3', 1, 150.00, 300.00, 400.00, 400.00, 450.00, TRUE, FALSE, TRUE),
-  (2, 2, '114', '18W', '4', 1, 150.00, 300.00, 400.00, 400.00, 450.00, TRUE, FALSE, TRUE);
+  (1, 'www.productid1_imagepath.com', 'these are the details for product id 1'),
+  (2, 'www.productid2_imagepath.com', 'these are the details for product id 2'),
+  (3, 'www.productid3_imagepath.com', 'these are the details for product id 3'),
+  (4, 'www.productid4_imagepath.com', 'these are the details for product id 4');
+
 
 INSERT INTO seller_products (user_id, product_id)
 VALUES

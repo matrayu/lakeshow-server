@@ -32,14 +32,18 @@ describe('Users Endpoints', function() {
             )
         )
 
-        const requiredFields = ['username', 'password', 'full_name', 'email']
+        const requiredFields = ['username', 'password', 'first_name', 'last_name', 'email', 'gender', 'dob']
 
         requiredFields.forEach(field => {
             const registerAttemptBody = {
                 username: 'test username',
                 password: 'test password',
-                full_name: 'test full_name',
                 email: 'test@email.com',
+                first_name: 'test',
+                last_name: 'test',
+                gender: 'male',
+                dob: '1999-08-03'
+
             }
             
             it(`responds with 400 required error when '${field}' is missing`, () => {
@@ -58,8 +62,11 @@ describe('Users Endpoints', function() {
                 const userShortPassword = {
                     username: 'test username',
                     password: '1234567',
-                    full_name: 'test full_name',
-                    email: 'test@email.com'
+                    email: 'test@email.com',
+                    first_name: 'test',
+                    last_name: 'test',
+                    gender: 'male',
+                    dob: '1999-08-03'
                 }
                 return supertest(app)
                   .post('/api/users')
@@ -69,10 +76,13 @@ describe('Users Endpoints', function() {
       
             it(`responds 400 'Password must be less than 72 characters' when long password`, () => {
               const userLongPassword = {
-                  username: 'test username',
-                  password: '*'.repeat(73),
-                  full_name: 'test full_name',
-                  email: 'test@email.com'
+                username: 'test username',
+                password: '*'.repeat(73),
+                email: 'test@email.com',
+                first_name: 'test',
+                last_name: 'test',
+                gender: 'male',
+                dob: '1999-08-03'
               }
               return supertest(app)
                 .post('/api/users')
@@ -82,10 +92,13 @@ describe('Users Endpoints', function() {
       
             it(`responds 400 error when password starts with spaces`, () => {
               const userPasswordStartsWithSpace = {
-                  username: 'test username',
-                  password: ' 12@adsUiujOJ',
-                  full_name: 'test full_name',
-                  email: 'test@email.com'
+                username: 'test username',
+                password: ' 12@adsUiujOJ',
+                email: 'test@email.com',
+                first_name: 'test',
+                last_name: 'test',
+                gender: 'male',
+                dob: '1999-08-03'
               }
               return supertest(app)
                 .post('/api/users')
@@ -95,10 +108,14 @@ describe('Users Endpoints', function() {
       
             it(`responds 400 error when password ends with spaces`, () => {
               const userPasswordEndsWithSpace = {
-                  username: 'test username',
-                  password: '12@adsUiujOJ ',
-                  full_name: 'test full_name',
-                  email: 'test@email.com'
+                username: 'test username',
+                password: '12@adsUiujOJ ',
+                email: 'test@email.com',
+                first_name: 'test',
+                last_name: 'test',
+                gender: 'male',
+                dob: '1999-08-03'
+
               }
               return supertest(app)
                 .post('/api/users')
@@ -108,10 +125,13 @@ describe('Users Endpoints', function() {
       
             it(`responds 400 error when password isn't complex enough`, () => {
               const userPasswordNotComplex = {
-                  username: 'test username',
-                  password: '11AAaabb',
-                  full_name: 'test full_name',
-                  email: 'test@email.com'
+                username: 'test username',
+                password: '11AAaabb',
+                email: 'test@email.com',
+                first_name: 'test',
+                last_name: 'test',
+                gender: 'male',
+                dob: '1999-08-03'
               }
               return supertest(app)
                 .post('/api/users')
@@ -121,10 +141,13 @@ describe('Users Endpoints', function() {
       
             it(`responds 400 'User name already taken' when username isn't unique`, () => {
               const duplicateUser = {
-                  username: testUser.username,
-                  password: '11AAaa!!',
-                  full_name: 'test full_name',
-                  email: 'test@email.com'
+                username: testUser.username,
+                password: '11AAaa!!',
+                email: 'test@email.com',
+                first_name: 'test',
+                last_name: 'test',
+                gender: 'male',
+                dob: '1999-08-03',
               }
 
               return supertest(app)
@@ -137,8 +160,11 @@ describe('Users Endpoints', function() {
                 const duplicateUser = {
                     username: 'test username',
                     password: '11AAaa!!',
-                    full_name: 'test full_name',
-                    email: testUser.email
+                    email: testUser.email,
+                    first_name: 'test',
+                    last_name: 'test',
+                    gender: 'male',
+                    dob: '1999-08-03',
                 }
   
                 return supertest(app)
@@ -150,10 +176,13 @@ describe('Users Endpoints', function() {
           context('Happy Path', () => {
               it(`responds 201, storing bcrypted password`, () => {
                   const newUser = {
-                      username: 'test username',
-                      password: '11AAaa!!',
-                      full_name: 'test full_name',
-                      email: 'test@email.com'
+                    username: 'test username',
+                    password: '11AAaa!!',
+                    email: 'test@email.com',
+                    first_name: 'test',
+                    last_name: 'test',
+                    gender: 'male',
+                    dob: '1999-08-03',
                   }
                   return supertest(app)
                       .post('/api/users')

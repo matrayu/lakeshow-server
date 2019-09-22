@@ -11,7 +11,6 @@ DROP TABLE IF EXISTS "ref_payment_methods";
 DROP TABLE IF EXISTS "seller_products";
 DROP TABLE IF EXISTS "product_images";
 DROP TABLE IF EXISTS "products";
-DROP TABLE IF EXISTS "product_groups";
 DROP TABLE IF EXISTS "games";
 DROP TABLE IF EXISTS "teams";
 DROP TABLE IF EXISTS "users";

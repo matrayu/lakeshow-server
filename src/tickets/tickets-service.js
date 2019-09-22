@@ -4,44 +4,53 @@ const Treeize = require('treeize')
 const TicketsService = {
     getAllTickets(db) {
         return db
-            .from('tickets')
+            .from('products')
             .select(
-                'tickets.id',
+                'products.id',
                 'game_id',
                 'section',
                 'seat_row',
-                'seats',
+                'seat',
                 'quantity',
-                'list_price',
-                'stubhub_price',
-                'ticketmaster_price',
-                'ebay_price',
+                'list_price_ea',
+                'stubhub_price_ea',
+                'ticketmaster_price_ea',
+                'ebay_price_ea',
                 'discount_available',
                 'singles_allowed',
                 'local_date',
                 'local_time',
                 'venue',
-                'team_name',
-                'logo',
+                't1.team_name as home_team',
+                't2.team_name as away_team',
+                't1.logo as home_logo',
+                't2.logo as away_logo',
                 'available'
             )
-            .where('tickets.available', true)
+            .where('products.available', true)
             .leftJoin(
                 'games',
-                'tickets.game_id',
+                'products.game_id',
                 'games.id',
             )
             .leftJoin(
-                'teams',
-                'games.away_team',
-                'teams.id',
+                'teams as t1',
+                'games.team_id_home',
+                't1.id',
+            )
+            .leftJoin(
+                'teams as t2',
+                'games.team_id_away',
+                't2.id',
             )
     },
 
     getById(db, id) {
         return TicketsService.getAllTickets(db)
-            .where('tickets.id', id)
-            .first()
+            .where('products.id', id)
+            .first(ticket => {
+                console.log(ticket)
+            })
     }
 }
 
