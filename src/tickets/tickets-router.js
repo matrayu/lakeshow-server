@@ -6,7 +6,6 @@ const ticketsRouter = express.Router()
 ticketsRouter
     .route('/')
     .get((req, res, next) => {
-        console.log('here')
         TicketsService.getAllTickets(req.app.get('db'))
             .then(tickets => {
                 res.json(tickets)

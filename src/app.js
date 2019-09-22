@@ -8,6 +8,7 @@ const { NODE_ENV } = require('./config')
 const ticketsRouter = require('./tickets/tickets-router')
 const usersRouter = require('./users/users-router')
 const authRouter = require('./auth/auth-router')
+const paypalRouter = require('./paypal/paypal-router')
 
 const app = express()
 
@@ -24,6 +25,7 @@ app.get('/', (req, res) => {
 app.use('/api/tickets', ticketsRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/auth', authRouter)
+app.use('/api/pay', paypalRouter)
 
 app.use(function errorHandler(error, req, res, next) {
     let response
