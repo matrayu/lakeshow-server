@@ -20,9 +20,9 @@ TRUNCATE
   users
   RESTART IDENTITY CASCADE;
 
-INSERT INTO users (gender, first_name, last_name, username, password, email, phone_number, logins)
+INSERT INTO users (gender, first_name, last_name, username, password, email, dob, phone_number, visits)
 VALUES
-  ('male', 'Mike', 'Dello', 'mdello', 'tester123', 'mdello@aol.com', '3103429876', 1);
+  ('male', 'Mike', 'Dello', 'mdello', 'tester123', 'mdello@aol.com','1980-05-04', '3103429876', 1);
 
 
 INSERT INTO teams (team_name, logo)
