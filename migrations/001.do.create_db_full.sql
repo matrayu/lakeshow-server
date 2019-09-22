@@ -48,6 +48,17 @@ CREATE TABLE games (
 	CONSTRAINT games_fk_1 FOREIGN KEY (team_id_away) REFERENCES teams(team_id) ON UPDATE RESTRICT ON DELETE RESTRICT
 );
 
+
+-- Drop table
+
+-- DROP TABLE public.product_groups;
+
+CREATE TABLE product_groups (
+	product_group_id serial NOT NULL,
+	CONSTRAINT product_groups_pkey PRIMARY KEY (product_group_id)
+);
+
+
 -- Drop table
 
 -- DROP TABLE public.products;
@@ -55,6 +66,7 @@ CREATE TABLE games (
 CREATE TABLE products (
 	product_id serial NOT NULL,
 	game_id int4 NOT NULL,
+	product_group_id int4 NOT NULL,
 	"section" varchar(255) NOT NULL,
 	seat_row varchar(255) NOT NULL,
 	seat varchar(255) NOT NULL,
@@ -69,7 +81,8 @@ CREATE TABLE products (
 	available bool NOT NULL DEFAULT true,
 	date_created timestamp NOT NULL DEFAULT now(),
 	CONSTRAINT products_pkey PRIMARY KEY (product_id),
-	CONSTRAINT products_fk FOREIGN KEY (game_id) REFERENCES games(game_id) ON UPDATE CASCADE ON DELETE RESTRICT
+	CONSTRAINT products_fk FOREIGN KEY (game_id) REFERENCES games(game_id) ON UPDATE CASCADE ON DELETE RESTRICT,
+	CONSTRAINT products_fk_1 FOREIGN KEY (product_group_id) REFERENCES product_groups(product_group_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 
@@ -80,12 +93,14 @@ CREATE TABLE products (
 
 CREATE TABLE product_images (
 	product_image_id serial NOT NULL,
-	product_id int4 NOT NULL,
+	product_group_id int4 NOT NULL,
 	product_image_path varchar NULL,
 	product_image_details varchar(255) NULL,
 	CONSTRAINT product_images_pkey PRIMARY KEY (product_image_id),
-	CONSTRAINT product_images_fk FOREIGN KEY (product_id) REFERENCES products(product_id) ON UPDATE CASCADE ON DELETE CASCADE
+	CONSTRAINT product_images_fk FOREIGN KEY (product_group_id) REFERENCES product_groups(product_group_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+
 
 
 -- Drop table
@@ -93,10 +108,10 @@ CREATE TABLE product_images (
 -- DROP TABLE public.seller_products;
 
 CREATE TABLE seller_products (
-	seller_products_id serial NOT NULL,
+	seller_product_id serial NOT NULL,
 	user_id int4 NOT NULL,
 	product_id int4 NOT NULL,
-	CONSTRAINT seller_products_pkey PRIMARY KEY (seller_products_id),
+	CONSTRAINT seller_products_pkey PRIMARY KEY (seller_product_id),
 	CONSTRAINT seller_products_fk FOREIGN KEY (user_id) REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT seller_products_fk_1 FOREIGN KEY (product_id) REFERENCES products(product_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -149,20 +164,6 @@ CREATE TABLE ref_order_status_codes (
 
 -- Drop table
 
--- DROP TABLE public.customer_payment_methods;
-
-CREATE TABLE customer_payment_methods (
-	customer_payment_id serial NOT NULL,
-	customer_id int4 NOT NULL,
-	payment_method_code int4 NOT NULL,
-	CONSTRAINT customer_payment_methods_pkey PRIMARY KEY (customer_payment_id),
-	CONSTRAINT customer_payment_methods_fk FOREIGN KEY (customer_id) REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT customer_payment_methods_fk_1 FOREIGN KEY (payment_method_code) REFERENCES ref_payment_methods(payment_method_code) ON UPDATE CASCADE ON DELETE CASCADE
-);
-
-
--- Drop table
-
 -- DROP TABLE public.orders;
 
 CREATE TABLE orders (
@@ -202,8 +203,10 @@ CREATE TABLE payments (
 	invoice_number int4 NOT NULL,
 	payment_date timestamp NOT NULL DEFAULT now(),
 	payment_amount money NULL,
+	payment_method_code int4 NOT NULL,
 	CONSTRAINT payments_pkey PRIMARY KEY (payment_id),
-	CONSTRAINT payments_fk FOREIGN KEY (invoice_number) REFERENCES invoices(invoice_number) ON UPDATE CASCADE ON DELETE RESTRICT
+	CONSTRAINT payments_fk FOREIGN KEY (invoice_number) REFERENCES invoices(invoice_number) ON UPDATE CASCADE ON DELETE RESTRICT,
+	CONSTRAINT payments_fk_1 FOREIGN KEY (payment_method_code) REFERENCES ref_payment_methods(payment_method_code) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 
