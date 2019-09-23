@@ -20,7 +20,7 @@ const TicketsService = {
                 'singles_allowed',
                 'local_date',
                 'local_time',
-                'venue',
+                'venue_name',
                 't1.team_name as home_team',
                 't2.team_name as away_team',
                 't1.logo as home_logo',
@@ -43,14 +43,17 @@ const TicketsService = {
                 'games.team_id_away',
                 't2.id',
             )
+            .leftJoin(
+                'venues',
+                'games.venue_id',
+                'venues.id',
+            )
     },
 
     getById(db, id) {
         return TicketsService.getAllTickets(db)
             .where('products.id', id)
-            .first(ticket => {
-                console.log(ticket)
-            })
+            .first()
     }
 }
 

@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS "seller_products";
 DROP TABLE IF EXISTS "product_images";
 DROP TABLE IF EXISTS "products";
 DROP TABLE IF EXISTS "games";
+DROP TABLE IF EXISTS "venues";
 DROP TABLE IF EXISTS "teams";
 DROP TABLE IF EXISTS "users";
 

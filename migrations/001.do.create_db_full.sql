@@ -35,6 +35,19 @@ CREATE TABLE teams (
 
 -- Drop table
 
+-- DROP TABLE public.venues;
+
+CREATE TABLE venues (
+	id serial NOT NULL,
+	venue_name varchar(255) NOT NULL,
+	venue_image varchar NULL,
+	venue_seatmap varchar NOT NULL,
+	CONSTRAINT venue_pkey PRIMARY KEY (id),
+	CONSTRAINT venues_venue_key UNIQUE (venue_name)
+);
+
+-- Drop table
+
 -- DROP TABLE public.games;
 
 CREATE TABLE games (
@@ -43,10 +56,11 @@ CREATE TABLE games (
 	team_id_away int2 NOT NULL,
 	local_date date NOT NULL,
 	local_time time NOT NULL,
-	venue varchar(255)  NOT NULL,
+	venue_id int2  NOT NULL,
 	CONSTRAINT games_pkey PRIMARY KEY (id),
-	CONSTRAINT games_fk FOREIGN KEY (team_id_home) REFERENCES teams(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
-	CONSTRAINT games_fk_1 FOREIGN KEY (team_id_away) REFERENCES teams(id) ON UPDATE RESTRICT ON DELETE RESTRICT
+	CONSTRAINT games_fk FOREIGN KEY (team_id_home) REFERENCES teams(id) ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT games_fk_1 FOREIGN KEY (team_id_away) REFERENCES teams(id) ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT games_fk_2 FOREIGN KEY (venue_id) REFERENCES venues(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- Drop table
@@ -70,7 +84,7 @@ CREATE TABLE products (
 	available bool NOT NULL DEFAULT true,
 	date_created timestamp NOT NULL DEFAULT now(),
 	CONSTRAINT products_pkey PRIMARY KEY (id),
-	CONSTRAINT products_fk FOREIGN KEY (game_id) REFERENCES games(id) ON UPDATE CASCADE ON DELETE RESTRICT
+	CONSTRAINT products_fk FOREIGN KEY (game_id) REFERENCES games(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 
@@ -162,7 +176,7 @@ CREATE TABLE orders (
 	order_details varchar(255) NULL,
 	CONSTRAINT orders_pkey PRIMARY KEY (id),
 	CONSTRAINT orders_fk FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE SET NULL,
-	CONSTRAINT orders_fk_1 FOREIGN KEY (order_status_code) REFERENCES ref_order_status_codes(id) ON UPDATE CASCADE ON DELETE RESTRICT
+	CONSTRAINT orders_fk_1 FOREIGN KEY (order_status_code) REFERENCES ref_order_status_codes(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 
@@ -193,8 +207,8 @@ CREATE TABLE payments (
 	payment_amount money NULL,
 	payment_method_code int4 NOT NULL,
 	CONSTRAINT payments_pkey PRIMARY KEY (id),
-	CONSTRAINT payments_fk FOREIGN KEY (invoice_number) REFERENCES invoices(id) ON UPDATE CASCADE ON DELETE RESTRICT,
-	CONSTRAINT payments_fk_1 FOREIGN KEY (payment_method_code) REFERENCES ref_payment_methods(id) ON UPDATE CASCADE ON DELETE RESTRICT
+	CONSTRAINT payments_fk FOREIGN KEY (invoice_number) REFERENCES invoices(id) ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT payments_fk_1 FOREIGN KEY (payment_method_code) REFERENCES ref_payment_methods(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 
@@ -213,9 +227,10 @@ CREATE TABLE order_items (
 	rma_issued_date timestamp NULL,
 	other_order_item_details varchar(255) NULL,
 	CONSTRAINT order_items_pkey PRIMARY KEY (id),
-	CONSTRAINT order_items_fk FOREIGN KEY (product_id) REFERENCES products(id) ON UPDATE CASCADE ON DELETE RESTRICT,
-	CONSTRAINT order_items_fk_1 FOREIGN KEY (order_id) REFERENCES orders(id) ON UPDATE CASCADE ON DELETE RESTRICT,
-	CONSTRAINT order_items_fk_2 FOREIGN KEY (order_item_status_code) REFERENCES ref_order_item_status_codes(id) ON UPDATE CASCADE ON DELETE RESTRICT
+	CONSTRAINT order_product_id_key UNIQUE (product_id),
+	CONSTRAINT order_items_fk FOREIGN KEY (product_id) REFERENCES products(id) ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT order_items_fk_1 FOREIGN KEY (order_id) REFERENCES orders(id) ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT order_items_fk_2 FOREIGN KEY (order_item_status_code) REFERENCES ref_order_item_status_codes(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 

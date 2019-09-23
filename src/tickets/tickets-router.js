@@ -1,6 +1,5 @@
 const express = require('express')
 const TicketsService = require('./tickets-service')
-
 const ticketsRouter = express.Router()
 
 ticketsRouter
