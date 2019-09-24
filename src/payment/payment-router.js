@@ -23,23 +23,22 @@ paymentRouter
         const { transactions } = req.body
         const db = req.app.get('db')
         console.log(user_id, transactions)
-        PaymentService.insertOrder(db, user_id, transactions)
+        PaymentService.insertOrder(db, user_id)
             .then(order => {
-                console.log(order)
+                transactions.forEach(product => {
+                    let orderItem = {
+                        product_id: product,
+                        order_id: order.id,
+                        order_item_status_code: 1,
+                        order_item_quantity: 1,
+                    }
+                    PaymentService.insertOrderItems(db, orderItem)
+                    PaymentService.updateProductAvailability(db, product)
+                })
+                return res.status(201).json({ message: 'successfully ingested' })
             })
-            .catch(error => {
-                console.log(error)
-            })
+            .catch(next)
     })
-    /* .route('/')
-    .get(jsonBodyParser, (req, res, next) => {
-        const { transactions } = req.body
-        console.log('payment router', transactions)
-        PaypalService.createPayment(transactions)
-        .then(ress => {
-            return res
-        })  
-});*/ 
   
   
 // success page 
