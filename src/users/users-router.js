@@ -2,6 +2,7 @@ const express = require('express')
 const path = require('path')
 const UserService = require('./users-service')
 const AuthService = require('../auth/auth-service')
+const { requireAuth } = require('../middleware/jwt-auth')
 
 const usersRouter = express.Router()
 const jsonBodyParser = express.json()
@@ -64,5 +65,19 @@ usersRouter
         })
         .catch(next)
     })
+
+usersRouter
+    .route('/:user_id')
+    .get(requireAuth, (req, res, next) => {
+        UserService.getUserNameAndEmail(req.app.get('db'),req.params.user_id)
+        .then(user => {
+            res.json({
+                first_name: user.first_name,
+                email: user.email
+            })
+        })
+    })
+    
+
 
 module.exports = usersRouter

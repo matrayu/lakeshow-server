@@ -2,6 +2,7 @@ const express = require('express')
 /* const paypal = require('paypal-rest-sdk') */
 /* const { PAYPAL_CID, PAYPAL_SECRET } = require('../config') */
 const PaymentService = require('./payment-service')
+const UserService = require('../users/users-service');
 const { requireAuth } = require('../middleware/jwt-auth')
 
 const paymentRouter = express.Router()
@@ -35,7 +36,9 @@ paymentRouter
                     PaymentService.insertOrderItems(db, orderItem)
                     PaymentService.updateProductAvailability(db, product)
                 })
-                return res.status(201).json({ message: 'successfully ingested' })
+                return res
+                        .status(201)
+                        .send({ message: 'successfully ingested' })
             })
             .catch(next)
     })
