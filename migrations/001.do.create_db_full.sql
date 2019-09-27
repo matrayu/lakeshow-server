@@ -52,11 +52,14 @@ CREATE TABLE venues (
 
 CREATE TABLE games (
 	id serial NOT NULL,
+	season int2 NOT NULL,
+	season_game_id varchar(255) NOT NULL,
 	team_id_home int2 NOT NULL,
 	team_id_away int2 NOT NULL,
 	local_date date NOT NULL,
 	local_time time NOT NULL,
 	venue_id int2  NOT NULL,
+	game_note varchar(255)  NULL,
 	CONSTRAINT games_pkey PRIMARY KEY (id),
 	CONSTRAINT games_fk FOREIGN KEY (team_id_home) REFERENCES teams(id) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT games_fk_1 FOREIGN KEY (team_id_away) REFERENCES teams(id) ON UPDATE CASCADE ON DELETE CASCADE,
