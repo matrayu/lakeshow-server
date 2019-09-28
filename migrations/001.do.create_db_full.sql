@@ -52,7 +52,7 @@ CREATE TABLE venues (
 
 CREATE TABLE games (
 	id serial NOT NULL,
-	season int2 NOT NULL,
+	season INTEGER NOT NULL,
 	season_game_id varchar(255) NOT NULL,
 	team_id_home int2 NOT NULL,
 	team_id_away int2 NOT NULL,
