@@ -12,7 +12,6 @@ TRUNCATE
   ref_invoice_status_codes,
   ref_payment_methods,
   seller_products,
-  product_groups,
   product_images,
   products,
   games,
