@@ -23,7 +23,6 @@ paymentRouter
         const user_id = req.user.id
         const { transactions } = req.body
         const db = req.app.get('db')
-        console.log(user_id, transactions)
         PaymentService.insertOrder(db, user_id)
             .then(order => {
                 transactions.forEach(product => {
@@ -47,8 +46,7 @@ paymentRouter
 // success page 
 paymentRouter
     .route('/success')
-    .get((req, res) => {
-    console.log(req.query); 
+    .get((req, res) => { 
     res.redirect('/'); 
 })
 
@@ -56,7 +54,6 @@ paymentRouter
 paymentRouter
     .route('/err')
     .get((req , res) => {
-        console.log(req.query); 
         res.redirect('/err.html'); 
 })
 

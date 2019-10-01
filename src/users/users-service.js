@@ -16,7 +16,6 @@ const UserService = {
             .where({ id })
             .first()
             .then(user => {
-                console.log(user)
                 return user
             })
     },

@@ -405,7 +405,7 @@ function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
 }
 
 function generateHash(pass) {
-  bcrypt.hash(pass, 12).then(hash => console.log({ hash }))
+  bcrypt.hash(pass, 12)
 }
 
 module.exports = {

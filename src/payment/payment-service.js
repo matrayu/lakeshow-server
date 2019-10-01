@@ -14,7 +14,6 @@ const PaymentService = {
     },
 
     insertOrderItems(db, orderItem) {
-      console.log('UPDATING ORDER Items')
       return db 
         .insert(orderItem)
         .into('order_items')
@@ -23,7 +22,6 @@ const PaymentService = {
     },
 
     updateProductAvailability(db, productId) {
-      console.log('Updating product avail', productId)
       return db('products')
         .where('id', '=', productId)
         .update({
