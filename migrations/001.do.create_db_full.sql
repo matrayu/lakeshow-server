@@ -1,6 +1,47 @@
+-- DROP TYPE gender;
+CREATE TYPE gender AS ENUM (
+	'male',
+	'female',
+	'other',
+	'rather not say'
+);
+
+-- DROP TYPE invoice_status;
+CREATE TYPE invoice_status AS ENUM (
+	'Issued',
+	'Paid',
+	'Cancelled'
+);
+
+-- DROP TYPE order_item_status;
+CREATE TYPE order_item_status AS ENUM (
+	'Delivered',
+	'Out of Stock'
+);
+
+-- DROP TYPE order_status;
+
+CREATE TYPE order_status AS ENUM (
+	'Cancelled',
+	'Completed'
+);
+
+-- DROP TYPE payment_method;
+
+CREATE TYPE payment_method AS ENUM (
+	'Credit Card',
+	'Paypal',
+	'Venmo',
+	'Cash'
+);
+
+
+
 -- Drop table
 
 -- DROP TABLE public.users;
+
+
 
 CREATE TABLE users (
 	id serial NOT NULL,
