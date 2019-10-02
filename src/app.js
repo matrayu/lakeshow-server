@@ -4,7 +4,6 @@ const morgan = require('morgan')
 const cors = require('cors')
 const helmet = require('helmet')
 const { NODE_ENV } = require('./config')
-//const tickets = require('./tickets')
 const ticketsRouter = require('./tickets/tickets-router')
 const usersRouter = require('./users/users-router')
 const authRouter = require('./auth/auth-router')
@@ -30,7 +29,7 @@ app.use('/api/pay', paymentRouter)
 app.use(function errorHandler(error, req, res, next) {
     let response
     if (NODE_ENV === 'production') {
-      response = { error: 'Server error' }
+      response = { error: error.message, object: error }
     } else {
       console.error(error)
       response = { error: error.message, object: error }
