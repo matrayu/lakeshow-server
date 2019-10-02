@@ -21,9 +21,7 @@
 .env.production.local
 /migrations/delete
 /seeds/ticketmaster.js
-
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-/seeds/seed.production.lakeshowtix_tables.sql
-seeds/seed.production.lakeshowtix_tables.sql
+/seeds/ignore
