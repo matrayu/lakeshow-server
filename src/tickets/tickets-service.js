@@ -21,6 +21,7 @@ const TicketsService = {
                 'local_date',
                 'local_time',
                 'venue_name',
+                'game_note',
                 't1.team_name as home_team',
                 't2.team_name as away_team',
                 't1.logo as home_logo',

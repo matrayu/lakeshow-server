@@ -22,6 +22,7 @@ const PaymentService = {
     },
 
     updateProductAvailability(db, productId) {
+      console.log(productId)
       return db('products')
         .where('id', '=', productId)
         .update({
