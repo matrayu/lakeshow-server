@@ -1,6 +1,6 @@
 
 <p align="center">
-  <a href="www.lakeshowtix.now.sh">
+  <a href="https://lakeshowtix.now.sh">
     <img alt="LakeshowTix" title="LakeshowTix" src="images/LakeshowLogov2_crop.png" width="250">
   </a>
 </p>
@@ -35,6 +35,7 @@ With the rise of ticket fees for both sellers and buyers in the secondary market
 #### Live App: https://lakeshowtix.now.sh/
 
 Client Github Repo: https://github.com/matrayu/lakeshow-app
+
 Server Github Repo: https://github.com/matrayu/lakeshow-server
 <hr>
 
