@@ -6,4 +6,7 @@ module.exports = {
     JWT_EXPIRY: process.env.JWT_EXPIRY || '3h',
     PAYPAL_CID: process.env.PAYPAL_CID,
     PAYPAL_SECRET: process.env.PAYPAL_SECRET,
+    MJ_APIKEY_PUBLIC: process.env.MJ_APIKEY_PUBLIC,
+    MJ_APIKEY_PRIVATE: process.env.MJ_APIKEY_PRIVATE
+
 }

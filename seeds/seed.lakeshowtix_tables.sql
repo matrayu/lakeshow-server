@@ -24,7 +24,7 @@ INSERT INTO users (gender, first_name, last_name, username, password, email, dob
 VALUES
   ('male', 'Mike', 'Dello', 'mdello', 'Tester12!', 'mdello@aol.com','1980-05-04', '3103429876', 1),
   ('male', 'Matt', 'Fried', 'matrayu', '$2a$12$Dhuzep9dG/kxlc7x/B/azOnkyANhEHgxCBlwMeaZWMS6MBRYtxczm', 'mfried@aol.com','1980-08-03', '310344444', 1),
-  ('male', 'Fred', 'Banks', 'fbanks', 'Tester12!', 'fbanks@aol.com','1999-09-18', '4243258469', 1);
+  ('male', 'Fred', 'Banks', 'tester', 'Tester12#', 'fbanks@aol.com','1999-09-18', '4243258469', 1);
 
 
 INSERT INTO teams (team_name, logo)

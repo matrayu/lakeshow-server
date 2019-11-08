@@ -4,7 +4,7 @@ const PaymentService = {
         user_id,
         order_status_code: 2,
         date_order_placed: 'now()',
-        order_details: 'These are some additional details'
+        order_details: ''
       }
       return db
         .insert(newOrder)
@@ -22,7 +22,6 @@ const PaymentService = {
     },
 
     updateProductAvailability(db, productId) {
-      console.log(productId)
       return db('products')
         .where('id', '=', productId)
         .update({

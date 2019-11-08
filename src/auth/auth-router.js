@@ -37,7 +37,7 @@ authRouter.post('/login', jsonBodyParser, (req, res, next) => {
                         authToken: AuthService.createJwt(sub, payload)
                     })
                 })
-    })
+        })
     .catch(next)
 })
 
