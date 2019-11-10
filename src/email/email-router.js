@@ -5,9 +5,7 @@ const { MJ_APIKEY_PUBLIC, MJ_APIKEY_PRIVATE } = require("../config")
 
 emailRouter
     .post("/", jsonBodyParser, (req, res, next) => {
-        //res.set("Content-Type", "application/json")
         const { data } = req.body
-        console.log("!!!!!!!!!!!!!!!!!!!!!!!", data.userData, data.ticketsArr, data.order)
          
         const mailjet = require ("node-mailjet")
             .connect(MJ_APIKEY_PUBLIC, MJ_APIKEY_PRIVATE)
@@ -26,9 +24,15 @@ emailRouter
                                     "Name": `${data.userData[0]}`
                                 }
                             ],
+                            "Bcc": [
+                                {
+                                    "Email": "matt.friedberg@gmail.com",
+                                    "Name": "Lakeshow Tickets Sale"  
+                                }
+                            ],
                             "TemplateID": 1070087,
                             "TemplateLanguage": true,
-                            "Subject": "Lakeshow Tickets - Purchase Confirmation ",
+                            "Subject": "Lakeshow Tickets - Purchase Confirmation",
                             "Variables": {
                                 "firstname": `${data.userData[0]}`,
                                 "total_price": `$${data.order.orderTotal}.00`,
@@ -43,12 +47,11 @@ emailRouter
             request
                 .then((result) => {
                     console.log(result.body)
+                    return res.send('{"message": "Email sent."}')
                 })
                 .catch((err) => {
-                    console.log(err.statusCode)
-                })
-
-        res.send('{"message": "Email sent."}')
+                    console.log(err.statusCode, err.Errors)
+                })    
     })
 
 module.exports = emailRouter
