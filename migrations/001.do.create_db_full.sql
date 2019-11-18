@@ -20,12 +20,14 @@ CREATE TYPE order_item_status AS ENUM (
 );
 
 -- DROP TYPE order_status;
+
 CREATE TYPE order_status AS ENUM (
 	'Cancelled',
 	'Completed'
 );
 
 -- DROP TYPE payment_method;
+
 CREATE TYPE payment_method AS ENUM (
 	'Credit Card',
 	'Paypal',
