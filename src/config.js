@@ -7,6 +7,6 @@ module.exports = {
     PAYPAL_CID: process.env.PAYPAL_CID,
     PAYPAL_SECRET: process.env.PAYPAL_SECRET,
     MJ_APIKEY_PUBLIC: process.env.MJ_APIKEY_PUBLIC,
-    MJ_APIKEY_PRIVATE: process.env.MJ_APIKEY_PRIVATE
-
+    MJ_APIKEY_PRIVATE: process.env.MJ_APIKEY_PRIVATE,
+    PW_RESET_CRYPTO_PASS: process.env.PW_RESET_CRYPTO_PASS
 }

@@ -20,14 +20,12 @@ CREATE TYPE order_item_status AS ENUM (
 );
 
 -- DROP TYPE order_status;
-
 CREATE TYPE order_status AS ENUM (
 	'Cancelled',
 	'Completed'
 );
 
 -- DROP TYPE payment_method;
-
 CREATE TYPE payment_method AS ENUM (
 	'Credit Card',
 	'Paypal',
@@ -50,6 +48,7 @@ CREATE TABLE users (
 	last_name varchar(255) NOT NULL,
 	username varchar(255) NOT NULL UNIQUE,
 	"password" varchar(255) NOT NULL,
+	"temppass" varchar(255),
 	email varchar(255) NOT NULL UNIQUE,
 	dob date NOT NULL,
 	phone_number varchar NULL,

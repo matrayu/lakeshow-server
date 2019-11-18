@@ -8,6 +8,7 @@ const ticketsRouter = require('./tickets/tickets-router')
 const usersRouter = require('./users/users-router')
 const authRouter = require('./auth/auth-router')
 const paymentRouter = require('./payment/payment-router')
+const forgotPasswordRouter = require('./password/forgotPassword-router')
 const mailjet = require('./email/email-router')
 
 const app = express()
@@ -18,16 +19,12 @@ app.use(morgan('combined', morganOption))
 app.use(cors())
 app.use(helmet())
 
-
-app.get('/', (req, res) => {
-    res.send('Hello, boilerplate!')
-})
-
 app.use('/api/tickets', ticketsRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/pay', paymentRouter)
 app.use('/api/send_email', mailjet)
+app.use('/api/password', forgotPasswordRouter)
 
 app.use(function errorHandler(error, req, res, next) {
     let response

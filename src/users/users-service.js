@@ -24,6 +24,7 @@ const UserService = {
         return db('users')
             .where({ email })
             .first()
+            //.returning('*')
             .then(email => !!email)
     },
 
@@ -33,6 +34,17 @@ const UserService = {
             .into('users')
             .returning('*')
             .then(([user]) => user)
+    },
+
+    resetPassword(db, email, hashedPassword) {
+        return db('users')
+            .where('email', '=', email)
+            .update({
+                password: hashedPassword,
+                date_modified: 'now()'
+            })
+            .returning('*')
+            .then(user => user)
     },
 
     validatePassword(password) {
@@ -66,7 +78,7 @@ const UserService = {
             dob: user.dob,
             date_created: new Date(user.date_created),
         }
-    },
+    }
 
 }
 
