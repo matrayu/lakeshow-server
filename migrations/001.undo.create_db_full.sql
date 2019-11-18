@@ -1,8 +1,3 @@
-DROP TYPE "payment_method";
-DROP TYPE "order_status";
-DROP TYPE "order_item_status";
-DROP TYPE "invoice_status";
-DROP TYPE "gender";
 DROP TABLE IF EXISTS "shipment_items";
 DROP TABLE IF EXISTS "shipments";
 DROP TABLE IF EXISTS "order_items";

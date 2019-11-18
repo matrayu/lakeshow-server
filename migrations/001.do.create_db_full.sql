@@ -48,7 +48,6 @@ CREATE TABLE users (
 	last_name varchar(255) NOT NULL,
 	username varchar(255) NOT NULL UNIQUE,
 	"password" varchar(255) NOT NULL,
-	"temppass" varchar(255),
 	email varchar(255) NOT NULL UNIQUE,
 	dob date NOT NULL,
 	phone_number varchar NULL,
