@@ -15,6 +15,14 @@ DROP TABLE IF EXISTS "games";
 DROP TABLE IF EXISTS "venues";
 DROP TABLE IF EXISTS "teams";
 DROP TABLE IF EXISTS "users";
+DROP TYPE IF EXISTS 
+    "invoice_status",
+    "order_item_status",
+    "order_status",
+    "payment_method",
+    "gender";
+
+
 
 
 
