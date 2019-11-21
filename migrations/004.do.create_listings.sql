@@ -5,7 +5,13 @@
 CREATE TABLE listings (
 	id serial NOT NULL,
 	user_id int4 NOT NULL,
+	available bool NOT NULL DEFAULT true,
+	qty int2 not NULL,
+	discount_available bool NOT NULL DEFAULT true,
+	singles_allowed bool NOT NULL DEFAULT false,
 	CONSTRAINT listings_pkey PRIMARY KEY (id),
+	CONSTRAINT listings_fk FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT listings_fk FOREIGN KEY (available) REFERENCES products(id) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT listings_fk FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 

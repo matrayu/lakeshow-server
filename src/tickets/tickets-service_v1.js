@@ -8,14 +8,14 @@ const TicketsService = {
             .select(
                 'products.id',
                 'game_id',
-                'seat_id',
-                'listing_id',
                 'section',
                 'seat_row',
                 'seat',
                 'quantity',
                 'list_price_ea',
                 'stubhub_price_ea',
+                'ticketmaster_price_ea',
+                'ebay_price_ea',
                 'discount_available',
                 'singles_allowed',
                 'local_date',
@@ -49,7 +49,6 @@ const TicketsService = {
                 'games.venue_id',
                 'venues.id',
             )
-            
     },
 
     getById(db, id) {

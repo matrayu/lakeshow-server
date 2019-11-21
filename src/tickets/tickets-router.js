@@ -7,6 +7,7 @@ ticketsRouter
     .get((req, res, next) => {
         TicketsService.getAllTickets(req.app.get('db'))
             .then(tickets => {
+                console.log("TIX", tickets)
                 res.json(tickets)
             })
             .catch(next)
