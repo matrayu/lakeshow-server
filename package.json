@@ -6,12 +6,13 @@
   "scripts": {
     "test": "mocha --require test/setup.js -w",
     "seed": "psql -U matrayu -d lakeshow_tix -f ./seeds/seed.lakeshowtix_tables.sql",
-    "seed-production": "cd seeds && cat seed.production.lakeshowtix_tables.sql | heroku pg:psql",
+    "seed-production": "cd seeds/production && cat seed.production.lakeshowtix_tables.sql | heroku pg:psql",
+    "seed-production-products": "cd seeds/production && cat seed.production.lakeshowtix_products.sql | heroku pg:psql",
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
     "predeploy": "npm audit && npm run migrate-production",
     "deploy": "git push heroku master",
-    "postdeploy": "cd seeds/ignore && cat seed.production.lakeshowtix_tables.sql | heroku pg:psql",
+    "postdeploy": "cd seeds/production && cat seed.production.lakeshowtix_tables.sql | heroku pg:psql",
     "migrate": "postgrator --config postgrator-config.js",
     "migrate-production": "postgrator --config postgrator-production-config.js"
   },
