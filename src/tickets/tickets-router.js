@@ -7,14 +7,34 @@ ticketsRouter
     .get((req, res, next) => {
         TicketsService.getAllTickets(req.app.get('db'))
             .then(tickets => {
+              const pageCount = Math.ceil(tickets.length / 10);
+              let page = parseInt(req.query.p);
+              if (!page) { page = 1;}
+              if (page > pageCount) {
+                page = pageCount
+              }
+              res
+                .set({
+                  'Access-Control-Expose-Headers': 'content-range, X-Total-Count',
+                  'content-range': `tickets 0-9/${tickets.length}`,
+                  'X-Total-Count': tickets.length,
+                  'Access-Control-Allow-Headers': 'content-range',
+                }) 
+                .json({
+                  "page": page,
+                  "pageCount": pageCount,
+                  "tickets": tickets.slice(page * 10 - 10, page * 10)
+                });
+              /* 
                 res
-                  /* .set({
+                  .set({
                     'Access-Control-Expose-Headers': 'content-range, X-Total-Count',
                     'content-range': `tickets 0-9/${tickets.length}`,
                     'X-Total-Count': tickets.length,
                     'Access-Control-Allow-Headers': 'content-range',
-                  }) */
+                  }) 
                   .json(tickets)
+              */
             })
             .catch(next)
     })
