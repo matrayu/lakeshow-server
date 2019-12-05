@@ -7,7 +7,14 @@ ticketsRouter
     .get((req, res, next) => {
         TicketsService.getAllTickets(req.app.get('db'))
             .then(tickets => {
-                res.json(tickets)
+                res
+                  /* .set({
+                    'Access-Control-Expose-Headers': 'content-range, X-Total-Count',
+                    'content-range': `tickets 0-9/${tickets.length}`,
+                    'X-Total-Count': tickets.length,
+                    'Access-Control-Allow-Headers': 'content-range',
+                  }) */
+                  .json(tickets)
             })
             .catch(next)
     })
