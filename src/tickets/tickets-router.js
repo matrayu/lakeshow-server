@@ -8,9 +8,7 @@ ticketsRouter
         TicketsService.getAllTickets(req.app.get('db'))
             .then(tickets => {
               res
-                .json({
-                  tickets
-                });
+                .json(tickets);
             })
             .catch(next)
     })
