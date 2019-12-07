@@ -1,8 +1,5 @@
-const xss = require('xss')
-const Treeize = require('treeize')
-
-const TicketsService = {
-    getAllTickets(db) {
+const ListingsService = {
+    getAllListings(db) {
         return db
             .from('products')
             .count('seat_id', {as: 'quantity'})
@@ -64,10 +61,10 @@ const TicketsService = {
     },
 
     getById(db, id) {
-        return TicketsService.getAllTickets(db)
-            .where('products.id', id)
+        return ListingsService.getListingsTickets(db)
+            .where('listing.id', id)
             .first()
     }
 }
 
-module.exports = TicketsService
+module.exports = ListingsService
