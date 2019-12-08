@@ -19,7 +19,7 @@ listingsRouter
                     compPriceEa: listing.stubhub_price_ea,
                   },
                   seatInfo: {
-                    seaction: listing.section,
+                    section: listing.section,
                     row: listing.seat_row,
                     seats: listing.seat,
                     seatMap: {
@@ -38,13 +38,14 @@ listingsRouter
                     dates: {
                       localDate: listing.local_date,
                       localTime: listing.local_time,
-                      }
                     },
-                    venue: listing.venue_name,
-                    images: {
-                      homeLogo: listing.home_logo,
-                      awayLogo: listing.away_logo
-                    }
+                    note: listing.game_note
+                  },
+                  venue: listing.venue_name,
+                  images: {
+                    homeLogo: listing.home_logo,
+                    awayLogo: listing.away_logo
+                  }
                 })
               })
               res
@@ -58,7 +59,7 @@ listingsRouter
     .route('/:listing_id')
     .all(checkListingExists)
     .get((req, res) => {
-
+    
       let sl = res.listing
 
       let listing = {
@@ -70,7 +71,7 @@ listingsRouter
           compPriceEa: sl.stubhub_price_ea,
         },
         seatInfo: {
-          seaction: sl.section,
+          section: sl.section,
           row: sl.seat_row,
           seats: sl.seat,
           seatMap: {
@@ -89,20 +90,18 @@ listingsRouter
           dates: {
             localDate: sl.local_date,
             localTime: sl.local_time,
-            }
           },
-          venue: sl.venue_name,
-          images: {
+          note: sl.game_note
+        },
+        venue: sl.venue_name,
+        images: {
             homeLogo: sl.home_logo,
             awayLogo: sl.away_logo
-          }
+        }
       }
-
-      
-      console.log(listing)
-        res
-            .status(200)
-            .json(listing)
+      res
+          .status(200)
+          .json(sl)
     })
 
     
