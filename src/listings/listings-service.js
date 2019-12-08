@@ -10,6 +10,7 @@ const ListingsService = {
                 'stubhub_price_ea',
                 'section',
                 'seat_row',
+                'seat',
                 'available',
                 'local_date',
                 'local_time',
@@ -46,8 +47,9 @@ const ListingsService = {
                 'game_id', 
                 'list_price_ea', 
                 'stubhub_price_ea', 
-                'section', 
-                'seat_row', 
+                'section',
+                'seat_row',
+                'seat', 
                 'available',
                 'local_date',
                 'local_time',
@@ -61,8 +63,8 @@ const ListingsService = {
     },
 
     getById(db, id) {
-        return ListingsService.getListingsTickets(db)
-            .where('listing.id', id)
+        return ListingsService.getAllListings(db)
+            .where('listing_id', id)
             .first()
     }
 }

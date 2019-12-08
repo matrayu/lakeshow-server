@@ -6,8 +6,49 @@ listingsRouter
     .route('/')
     .get((req, res, next) => {
         ListingsService.getAllListings(req.app.get('db'))
-            .then(listings => {
+            .then(allListings => {
+              let listings = []
+
+              allListings.map(listing => {
+                listings.push({
+                  id: listing.listing_id,
+                  available: listing.available,
+                  qty: listing.quantity,
+                  prices: {
+                    listPriceEa: listing.list_price_ea,
+                    compPriceEa: listing.stubhub_price_ea,
+                  },
+                  seatInfo: {
+                    seaction: listing.section,
+                    row: listing.seat_row,
+                    seats: listing.seat,
+                    seatMap: {
+                      arena: "https://maps.ticketmaster.com/maps/geometry/3/event/2C005709B19C0A96/staticImage?type=png&systemId=HOST",
+                      sectionLarge: "https://res.cloudinary.com/matrayu/image/upload/v1574493667/Lakers/rvxhgpfctcbrfbil76g2.png",
+                      sectionSmall: "https://res.cloudinary.com/matrayu/image/upload/v1574493431/Lakers/rie56zhvuhmu1hzvveiq.png"
+                    }
+                  },
+                  event: {
+                    id: listing.game_id,
+                    name: `${listing.home_team} vs. ${listing.away_team}`,
+                    teams: {
+                      home: listing.home_team,
+                      away: listing.away_team
+                    },
+                    dates: {
+                      localDate: listing.local_date,
+                      localTime: listing.local_time,
+                      }
+                    },
+                    venue: listing.venue_name,
+                    images: {
+                      homeLogo: listing.home_logo,
+                      awayLogo: listing.away_logo
+                    }
+                })
+              })
               res
+                .status(200)
                 .json(listings);
             })
             .catch(next)
@@ -17,9 +58,51 @@ listingsRouter
     .route('/:listing_id')
     .all(checkListingExists)
     .get((req, res) => {
+
+      let sl = res.listing
+
+      let listing = {
+        id: sl.listing_id,
+        available: sl.available,
+        qty: sl.quantity,
+        prices: {
+          listPriceEa: sl.list_price_ea,
+          compPriceEa: sl.stubhub_price_ea,
+        },
+        seatInfo: {
+          seaction: sl.section,
+          row: sl.seat_row,
+          seats: sl.seat,
+          seatMap: {
+            arena: "https://maps.ticketmaster.com/maps/geometry/3/event/2C005709B19C0A96/staticImage?type=png&systemId=HOST",
+            sectionLarge: "https://res.cloudinary.com/matrayu/image/upload/v1574493667/Lakers/rvxhgpfctcbrfbil76g2.png",
+            sectionSmall: "https://res.cloudinary.com/matrayu/image/upload/v1574493431/Lakers/rie56zhvuhmu1hzvveiq.png"
+          }
+        },
+        event: {
+          id: sl.game_id,
+          name: `${sl.home_team} vs. ${sl.away_team}`,
+          teams: {
+            home: sl.home_team,
+            away: sl.away_team
+          },
+          dates: {
+            localDate: sl.local_date,
+            localTime: sl.local_time,
+            }
+          },
+          venue: sl.venue_name,
+          images: {
+            homeLogo: sl.home_logo,
+            awayLogo: sl.away_logo
+          }
+      }
+
+      
+      console.log(listing)
         res
             .status(200)
-            .json(res.listing)
+            .json(listing)
     })
 
     
