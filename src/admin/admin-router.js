@@ -45,8 +45,9 @@ adminRouter
                 return comparison * sorted;
               }
               
-              let ticketOuput = tickets.sort(compare).slice(range[0], range[1] + 1)
+              let ticketOutput = tickets.sort(compare).slice(range[0], range[1] + 1)
               let contentRange = `tickets ${range[0]}-${range[1]}/${tickets.length}`
+              console.log(ticketOutput)
               
               res
                 .set({
@@ -65,7 +66,7 @@ adminRouter
                     "order": OrderBy
                   },
                   "filter": {},
-                  tickets: ticketOuput
+                  tickets: ticketOutput
                 });
             })
             .catch(next)

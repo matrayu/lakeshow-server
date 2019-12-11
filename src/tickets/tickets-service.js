@@ -1,13 +1,10 @@
-const xss = require('xss')
-const Treeize = require('treeize')
-
 const TicketsService = {
     getAllTickets(db) {
         return db
             .from('products')
             .count('seat_id', {as: 'quantity'})
             .select(
-                'listing_id',
+                'listing_id as id',
                 'game_id',
                 'list_price_ea',
                 'stubhub_price_ea',

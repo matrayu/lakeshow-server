@@ -23,9 +23,9 @@ TRUNCATE
 INSERT INTO users (gender, first_name, last_name, username, password, email, dob, phone_number, visits)
 VALUES
   ('male', 'Mike', 'Dello', 'mdello', 'Tester12!', 'mdello@aol.com','1980-05-04', '3103429876', 1),
-  ('male', 'Matt', 'Fried', 'matrayu', '$2a$12$Dhuzep9dG/kxlc7x/B/azOnkyANhEHgxCBlwMeaZWMS6MBRYtxczm', 'mfried@aol.com','1980-08-03', '310344444', 1),
+  ('male', 'Matt', 'Fried', 'matrayu1', 'Tester12#', 'mfried@aol.com','1980-08-03', '310344444', 1),
   ('male', 'Fred', 'Banks', 'tester', 'Tester12#', 'fbanks@aol.com','1999-09-18', '4243258469', 1),
-  ('male', 'Matt', 'Friedberg',	'matrayu1',	'$2a$12$VEr/7PQ3PJ025.53QcBRPe6pn/FMgwOabZY3mA9CqDQo6D2YXmgu6', 'northridge614@gmail.com',	'1979-08-03',null,1);
+  ('male', 'Matt', 'Friedberg',	'matrayu',	'Tester12#', 'northridge614@gmail.com',	'1979-08-03',null,1);
 
 INSERT INTO teams (team_name, logo)
 VALUES
