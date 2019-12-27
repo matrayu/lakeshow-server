@@ -2,9 +2,8 @@ const TicketsService = {
     getAllTickets(db) {
         return db
             .from('products')
-            .count('seat_id', {as: 'quantity'})
             .select(
-                'listing_id as id',
+                'products.id',
                 'game_id',
                 'list_price_ea',
                 'stubhub_price_ea',
@@ -20,7 +19,7 @@ const TicketsService = {
                 't1.logo as home_logo',
                 't2.logo as away_logo',
             )
-            .where('products.available', true)
+            //.where('products.available', true)
             .leftJoin(
                 'games',
                 'products.game_id',
@@ -41,30 +40,29 @@ const TicketsService = {
                 'games.venue_id',
                 'venues.id',
             )
-            .groupBy(
-                'listing_id', 
-                'game_id', 
-                'list_price_ea', 
-                'stubhub_price_ea', 
-                'section', 
-                'seat_row', 
-                'available',
-                'local_date',
-                'local_time',
-                'venue_name',
-                'game_note',
-                'home_team',
-                'away_team',
-                'home_logo',
-                'away_logo',
-            )
     },
 
     getById(db, id) {
         return TicketsService.getAllTickets(db)
             .where('products.id', id)
-            .first()
-    }
+            .first("*")
+    },
+
+    updateListing(db, listingUpdate) {
+        return db
+            .from('products')
+            .where('products.id', listingUpdate.id)
+            .update(listingUpdate)
+            .returning('*')
+            .then(([listing]) => listing)
+          /* .insert(newReview)
+          .into('thingful_reviews')
+          .returning('*')
+          .then(([review]) => review)
+          .then(review =>
+            ReviewsService.getById(db, review.id)
+          ) */
+          },
 }
 
 module.exports = TicketsService
