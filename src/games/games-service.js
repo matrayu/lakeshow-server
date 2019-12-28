@@ -1,15 +1,9 @@
-const TicketsService = {
-    getAllTickets(db) {
+const GamesService = {
+    getAllGames(db) {
         return db
-            .from('products')
+            .from('games')
             .select(
-                'products.id',
-                'game_id',
-                'list_price_ea',
-                'stubhub_price_ea',
-                'section',
-                'seat_row',
-                'available',
+                'games.id',
                 'local_date',
                 'local_time',
                 'venue_name',
@@ -18,12 +12,6 @@ const TicketsService = {
                 't2.team_name as away_team',
                 't1.logo as home_logo',
                 't2.logo as away_logo',
-            )
-            //.where('products.available', true)
-            .leftJoin(
-                'games',
-                'products.game_id',
-                'games.id',
             )
             .leftJoin(
                 'teams as t1',
@@ -43,19 +31,19 @@ const TicketsService = {
     },
 
     getById(db, id) {
-        return TicketsService.getAllTickets(db)
-            .where('products.id', id)
+        return GamesService.getAllGames(db)
+            .where('games.id', id)
             .first("*")
     },
 
-    updateListing(db, listingUpdate) {
+    updateGame(db, gameUpdate) {
         return db
-            .from('products')
-            .where('products.id', listingUpdate.id)
-            .update(listingUpdate)
+            .from('games')
+            .where('games.id', gameUpdate.id)
+            .update(gameUpdate)
             .returning('*')
-            .then(([listing]) => listing)
-          },
+            .then(([game]) => game)
+        },
 }
 
-module.exports = TicketsService
+module.exports = GamesService

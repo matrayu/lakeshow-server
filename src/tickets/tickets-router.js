@@ -9,18 +9,26 @@ ticketsRouter
       TicketsService.getAllTickets(req.app.get('db'))
       .then(tickets => {
         const pageCount = Math.ceil(tickets.length / 10);
-        let page = parseInt(req.query.page);
+        /* let page = parseInt(req.query.page);
         let range = JSON.parse(req.query.range);
         let sort = JSON.parse(req.query.sort)
+        let filter = JSON.parse(req.query.filter)
 
-        console.log(page, range, sort)
+        console.log("Page",page, "Range",range, "Sort",sort, "Filter",filter) */
+
+        let page;
+        let range;
+        let sort;
+        let filter;
+
+        !req.query.page ? page = 1 :  page = parseInt(req.query.page)
+        !req.query.range ? range = [0,9] : range = JSON.parse(req.query.range)
+        !req.query.sort ? sort = ['id', 'ASC'] : sort = JSON.parse(req.query.sort)
+        !req.query.filter ? filter = {} : filter = JSON.parse(req.query.filter)
 
         let sortBy = sort[0]
         let OrderBy = sort[1]
-      
         let sorted = 0
-
-        if (!page) { page = 1;}
 
         if (page > pageCount) {
           page = pageCount
@@ -69,15 +77,16 @@ ticketsRouter
               "order": OrderBy
             },
             "filter": {},
-            tickets: ticketOutput
+            data: ticketOutput
           });
       })
       .catch(next)
   })
 
   ticketsRouter
-  .route('/')
+  .route('/:ticket_id')
   .put(jsonBodyParser, (req, res, next) => {
+    console.log("************* PUT REQUEST ***************")
     const { id, list_price_ea, stubhub_price_ea, discount_available, available } = req.body
     const update = { id, list_price_ea, stubhub_price_ea, discount_available, available }
 
@@ -104,6 +113,7 @@ ticketsRouter
   .route('/:ticket_id')
   .all(checkTicketExists)
   .get((req, res) => {
+    console.log("************* CHECK ALL TIX REQUEST ***************")
       res
           .status(200)
           .json(res.ticket)
