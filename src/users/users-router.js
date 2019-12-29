@@ -8,75 +8,241 @@ const usersRouter = express.Router()
 const jsonBodyParser = express.json()
 
 usersRouter
-    .post('/', jsonBodyParser, (req, res, next) => {
-        const { password, username, first_name, last_name, dob, gender, email } = req.body
+    .route('/')
+    .get(
+            /* requireAuth,  */
+            (req, res, next) => 
+        {
+            console.log("************* GET ALL USERS ****************")
+            UserService.getAllUsers(req.app.get('db'))
+                .then(data => {
+                    let page;
+                    let range;
+                    let sort;
+                    let filter;
 
-        for (const field of ['first_name', 'last_name', 'gender', 'dob', 'username', 'password', 'email'])
-            if (!req.body[field])
-                return res.status(400).json({
-                    error: `Missing '${field}' in request body`
-                })
-        
-        const passwordError = UserService.validatePassword(password)
-        const db = req.app.get('db')
+                    !req.query.page ? page = 1 :  page = parseInt(req.query.page)
+                    !req.query.range ? range = [0,9] : range = JSON.parse(req.query.range)
+                    !req.query.sort ? sort = ['id', 'ASC'] : sort = JSON.parse(req.query.sort)
+                    !req.query.filter ? filter = null : filter = JSON.parse(req.query.filter)
 
-        if (passwordError)
-                return res.status(400).json({ error: passwordError })
+                    console.log("Page",page, "Range",range, "Sort",sort, "Filter",filter)
 
-        UserService.hasUserWithUserName(db,username)
-        .then(hasUserWithUserName => {
-            if (hasUserWithUserName) {
-                return res.status(400).json({
-                    error: `Username already taken`
-                })
-            }
-            return UserService.hasUserWithEmail(db, email)
-            .then(hasUserWithEmail => {
-                if (hasUserWithEmail) {
-                    return res.status(400).json({
-                        error: `Email has already been registered`
-                    }) 
-                }    
-                return UserService.hashPassword(password)
-                .then(hashedPassword => {
-                    const newUser = {
-                        username,
-                        password: hashedPassword,
-                        first_name,
-                        last_name,
-                        gender,
-                        dob,
-                        email,
-                        date_created: 'now()'
+                    function isValidObject(objToTest) {
+                        if (objToTest == null) return false;
+                        if ("undefined" == typeof(objToTest)) return false;
+                        if (Object.keys(objToTest).length === 0) return false;
+                        return true
                     }
-                    return UserService.insertUser(db,newUser)
-                    .then(user => {
-                        const sub = username
-                        const payload = { user_id: user.id }
-                        const token = AuthService.createJwt(sub, payload)
-                        res
-                            .status(201)
-                            .location(path.posix.join(req.originalUrl, `/tickets`))
-                            .json({ authToken: token })
-                            /* .json(UserService.serializeUser(user)) */
-                    })
+
+                    let filteredList = []
+                    if (isValidObject(filter)) {
+                        filter.id.map(id => {
+                            filteredList.push(data.filter(d => d.id == id))
+                        })
+                        data = []
+                        filteredList.map(d => {
+                            data.push(d[0])
+                        })
+                    }
+
+                    const pageCount = Math.ceil(data.length / 10);
+                    let sortBy = sort[0]
+                    let OrderBy = sort[1]
+                    let sorted = 0
+
+                    if (!page) { page = 1;}
+
+                    if (page > pageCount) {
+                        page = pageCount
+                    }
+
+                    if(sortBy && OrderBy){
+                        if(OrderBy === 'DESC') {
+                            sorted = -1
+                        }
+                        else {
+                            sorted = 1
+                        }
+                    }
+
+                    let compare = (a, b) => {
+                        // Use toUpperCase() to ignore character casing
+                        const sortA = a[sortBy];
+                        const sortB = b[sortBy];          
+                        
+                        let comparison = 0;
+                        if (sortA > sortB) {
+                            comparison = 1;
+                        } else if (sortA < sortB) {
+                            comparison = -1;
+                        }
+                        return comparison * sorted;
+                    }
+                    
+                    let dataOutput = data.sort(compare).slice(range[0], range[1] + 1)
+                    let contentRange = `data ${range[0]}-${range[1]}/${data.length}`
+                    res
+                        .set({
+                            'Access-Control-Expose-Headers': 'content-range, X-Total-Count',
+                            'content-range': contentRange,
+                            'X-Total-Count': data.length,
+                            'Access-Control-Allow-Headers': 'content-range',
+                        })
+                        .json({
+                            "pagination": {
+                                "page": page,
+                                "pageCount": pageCount,
+                            },
+                            "sort": {
+                                "field": sortBy,
+                                "order": OrderBy
+                            },
+                            "filter": {},
+                            data: dataOutput
+                        });
+                })
+                .catch(next)
+})
+
+usersRouter
+    .post('/', jsonBodyParser, (req, res, next) => {
+    const { password, username, first_name, last_name, dob, gender, email } = req.body
+
+    for (const field of ['first_name', 'last_name', 'gender', 'dob', 'username', 'password', 'email'])
+        if (!req.body[field])
+            return res.status(400).json({
+                error: `Missing '${field}' in request body`
+            })
+    
+    const passwordError = UserService.validatePassword(password)
+    const db = req.app.get('db')
+
+    if (passwordError)
+            return res.status(400).json({ error: passwordError })
+
+    UserService.hasUserWithUserName(db,username)
+    .then(hasUserWithUserName => {
+        if (hasUserWithUserName) {
+            return res.status(400).json({
+                error: `Username already taken`
+            })
+        }
+        return UserService.hasUserWithEmail(db, email)
+        .then(hasUserWithEmail => {
+            if (hasUserWithEmail) {
+                return res.status(400).json({
+                    error: `Email has already been registered`
+                }) 
+            }    
+            return UserService.hashPassword(password)
+            .then(hashedPassword => {
+                const newUser = {
+                    username,
+                    password: hashedPassword,
+                    first_name,
+                    last_name,
+                    gender,
+                    dob,
+                    email,
+                    date_created: 'now()'
+                }
+                return UserService.insertUser(db,newUser)
+                .then(user => {
+                    const sub = username
+                    const payload = { user_id: user.id }
+                    const token = AuthService.createJwt(sub, payload)
+                    res
+                        .status(201)
+                        .location(path.posix.join(req.originalUrl, `/tickets`))
+                        .json({ authToken: token })
+                        /* .json(UserService.serializeUser(user)) */
                 })
             })
         })
-        .catch(next)
     })
+    .catch(next)
+})
 
 usersRouter
     .route('/:user_id')
-    .get(requireAuth, (req, res, next) => {
-        UserService.getUserNameAndEmail(req.app.get('db'),req.params.user_id)
-        .then(user => {
-            res.json({
-                first_name: user.first_name,
-                email: user.email
+    .get(
+            /* requireAuth,  */
+            (req, res, next) => 
+        {
+            UserService.getUserNameAndEmail(req.app.get('db'),req.params.user_id)
+                .then(user => {
+                    res.json({
+                        first_name: user.first_name,
+                        email: user.email
+                    })
+                })
+})
+
+usersRouter
+    .route('/:user_id')
+    .put(jsonBodyParser, (req, res, next) => {
+        console.log("************* PUT USER REQUEST ***************")
+        const { id, first_name, last_name, username, password, email, dob, phone_number, gender } = req.body
+        const update = { id, first_name, last_name, username, password, email, dob, phone_number, gender }
+
+        console.log(update)
+
+        for (const [key, value] of Object.entries(update))
+            if (value == null) {
+                delete update[key]
+            }
+        
+        console.log("UPDATE EQUALS", update)
+
+        UserService.updateUserInfo(req.app.get('db'), update)
+            .then(updates => {
+                console.log("Router Update", updates)
+                res
+                    .status(200)
+                    .json({ message: `User ${req.params.user_id} has been successfully updated.`})
+                /*  .location(path.posix.join(req.originalUrl, `/${review.id}`))
+                    .json(ReviewsService.serializeReview(review)) */
             })
+            .catch(next)
+})
+
+usersRouter
+    .route('/:user_id')
+    .delete((req, res, next) => {
+        console.log("************* DELETE USER REQUEST ***************")
+
+        const userId = req.params.user_id
+
+        UserService.deleteUser(req.app.get('db'), userId)
+            .then(updates => {
+                res
+                    .status(200)
+                    .json({ message: `User ${req.params.user_id} has been successfully delete.`})
+                    //.location(path.posix(req.originalUrl))
+                    /*  .json(ReviewsService.serializeReview(review)) */
+            })
+            .catch(next)
+})
+
+usersRouter
+    .route('/')
+    .delete(jsonBodyParser, (req, res, next) => {
+        console.log("************* DELETE MANY USERS REQUEST ***************")
+
+        let filter = JSON.parse(req.query.filter)
+
+        filter.id.map(id => {
+            UserService.deleteUser(req.app.get('db'), idss)
+            .then(updates => {
+                res
+                    .status(200)
+                    .json({ message: `User ${id} successfully deleted.`})
+            })
+            .catch(next)
         })
-    })
+        
+})
     
 
 
