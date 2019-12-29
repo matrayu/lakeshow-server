@@ -43,7 +43,7 @@ const GamesService = {
             .update(gameUpdate)
             .returning('*')
             .then(([game]) => game)
-        },
+    },
 }
 
 module.exports = GamesService
