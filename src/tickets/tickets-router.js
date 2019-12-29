@@ -101,10 +101,8 @@ ticketsRouter
       .then(updates => {
         console.log("Router Update", updates)
         res
-          .status(201)
-          .json({ update: updates })
-          /* .location(path.posix.join(req.originalUrl, `/${review.id}`))
-          .json(ReviewsService.serializeReview(review)) */
+          .status(200)
+          .json(updates)
       })
       .catch(next)
     })
