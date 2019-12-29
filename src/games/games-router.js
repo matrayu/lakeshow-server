@@ -121,8 +121,8 @@ gamesRouter
       .then(updates => {
         console.log("Router Update", updates)
         res
-          .status(201)
-          .json({ update: updates })
+          .status(200)
+          .json(updates)
           /* .location(path.posix.join(req.originalUrl, `/${review.id}`))
           .json(ReviewsService.serializeReview(review)) */
       })
