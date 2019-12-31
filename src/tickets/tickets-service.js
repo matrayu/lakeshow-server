@@ -5,6 +5,7 @@ const TicketsService = {
             .select(
                 'products.id',
                 'game_id',
+                'purchase_price_ea',
                 'list_price_ea',
                 'stubhub_price_ea',
                 'section',
@@ -19,7 +20,6 @@ const TicketsService = {
                 't1.logo as home_logo',
                 't2.logo as away_logo',
             )
-            //.where('products.available', true)
             .leftJoin(
                 'games',
                 'products.game_id',
@@ -55,7 +55,15 @@ const TicketsService = {
             .update(listingUpdate)
             .returning('*')
             .then(([listing]) => listing)
-          },
+    },
+
+    insertTicket(db, newTicket) {
+        return db
+            .insert(newTicket)
+            .into('products')
+            .returning('*')
+            .then(([ticket]) => ticket)
+    }
 }
 
 module.exports = TicketsService

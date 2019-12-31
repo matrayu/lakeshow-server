@@ -3,102 +3,111 @@ const GamesService = require('./games-service')
 const gamesRouter = express.Router()
 const jsonBodyParser = express.json()
 
+let moment = require("moment");
+
 gamesRouter
   .route('/')
   .get((req, res, next) => {
     console.log("************* GET ALL GAMES ****************")
     GamesService.getAllGames(req.app.get('db'))
-    .then(games => {
-      console.log("Page",req.query.page, "Range",req.query.range, "Sort",req.query.sort, "Filter",req.query.filter)
-
-      let page;
-      let range;
-      let sort;
-      let filter;
-
-      !req.query.page ? page = 1 :  page = parseInt(req.query.page)
-      !req.query.range ? range = [0,9] : range = JSON.parse(req.query.range)
-      !req.query.sort ? sort = ['id', 'ASC'] : sort = JSON.parse(req.query.sort)
-      !req.query.filter ? filter = null : filter = JSON.parse(req.query.filter)
-
-      console.log("Page",page, "Range",range, "Sort",sort, "Filter",filter)
-
-      function isValidObject(objToTest) {
-        if (objToTest == null) return false;
-        if ("undefined" == typeof(objToTest)) return false;
-        if (Object.keys(objToTest).length === 0) return false;
-        return true
-      }
-
-      let filteredList = []
-      if (isValidObject(filter)) {
-        filter.id.map(id => {
-          filteredList.push(games.filter(game => game.id == id))
+      .then(games => {
+        let data = games.map(game => {
+          let date = moment(game.local_date).format("YYYY-MM-DD")
+          let title = `${date} - Lakers vs ${game.away_team}`
+          return (
+            {
+              ...game, 
+              title
+            }
+          )
         })
-        games = []
-        filteredList.map(game => {
-          games.push(game[0])
-        })
-      }
 
-      const pageCount = Math.ceil(games.length / 10);
-      let sortBy = sort[0]
-      let OrderBy = sort[1]
-      let sorted = 0
+        let page;
+        let range;
+        let sort;
+        let filter;
 
-      if (!page) { page = 1;}
+        !req.query.page ? page = 1 :  page = parseInt(req.query.page)
+        !req.query.range ? range = [0,9] : range = JSON.parse(req.query.range)
+        !req.query.sort ? sort = ['id', 'ASC'] : sort = JSON.parse(req.query.sort)
+        !req.query.filter ? filter = null : filter = JSON.parse(req.query.filter)
 
-      if (page > pageCount) {
-        page = pageCount
-      }
+        console.log("Page",page, "Range",range, "Sort",sort, "Filter",filter)
 
-      if(sortBy && OrderBy){
-        if(OrderBy === 'DESC') {
-          sorted = -1
+        function isValidObject(objToTest) {
+            if (objToTest == null) return false;
+            if ("undefined" == typeof(objToTest)) return false;
+            if (Object.keys(objToTest).length === 0) return false;
+            return true
         }
-        else {
-          sorted = 1
-        }
-      }
 
-      let compare = (a, b) => {
-        // Use toUpperCase() to ignore character casing
-        const sortA = a[sortBy];
-        const sortB = b[sortBy];          
+        let filteredList = []
+        if (isValidObject(filter)) {
+            filter.id.map(id => {
+                filteredList.push(data.filter(d => d.id == id))
+            })
+            data = []
+            filteredList.map(d => {
+                data.push(d[0])
+            })
+        }
+
+        const pageCount = Math.ceil(data.length / 10);
+        let sortBy = sort[0]
+        let OrderBy = sort[1]
+        let sorted = 0
+
+        if (!page) { page = 1;}
+
+        if (page > pageCount) {
+            page = pageCount
+        }
+
+        if(sortBy && OrderBy){
+            if(OrderBy === 'DESC') {
+                sorted = -1
+            }
+            else {
+                sorted = 1
+            }
+        }
+
+        let compare = (a, b) => {
+            const sortA = a[sortBy];
+            const sortB = b[sortBy];          
+            
+            let comparison = 0;
+            if (sortA > sortB) {
+                comparison = 1;
+            } else if (sortA < sortB) {
+                comparison = -1;
+            }
+            return comparison * sorted;
+        }
         
-        let comparison = 0;
-        if (sortA > sortB) {
-          comparison = 1;
-        } else if (sortA < sortB) {
-          comparison = -1;
-        }
-        return comparison * sorted;
-      }
-      
-      let gamesOutput = games.sort(compare).slice(range[0], range[1] + 1)
-      let contentRange = `games ${range[0]}-${range[1]}/${games.length}`
-      
-      res
-        .set({
-          'Access-Control-Expose-Headers': 'content-range, X-Total-Count',
-          'content-range': contentRange,
-          'X-Total-Count': games.length,
-          'Access-Control-Allow-Headers': 'content-range',
-        })
-        .json({
-          "pagination": {
-            "page": page,
-            "pageCount": pageCount,
-          },
-          "sort": {
-            "field": sortBy,
-            "order": OrderBy
-          },
-          "filter": {},
-          data: gamesOutput
-        });
-    })
-    .catch(next)
+        let dataOutput = data.sort(compare).slice(range[0], range[1] + 1)
+        let contentRange = `data ${range[0]}-${range[1]}/${data.length}`
+        res
+            .set({
+                'Access-Control-Expose-Headers': 'content-range, X-Total-Count',
+                'content-range': contentRange,
+                'X-Total-Count': data.length,
+                'Access-Control-Allow-Headers': 'content-range',
+            })
+            .json({
+                "pagination": {
+                    "page": page,
+                    "pageCount": pageCount,
+                },
+                "sort": {
+                    "field": sortBy,
+                    "order": OrderBy
+                },
+                "filter": {},
+                data: dataOutput
+            });
+      })
+      .catch(next)
 })
 
 gamesRouter
@@ -134,10 +143,17 @@ gamesRouter
   .all(checkGameExists)
   .get((req, res) => {
     console.log("************* CHECK ALL GAMES REQUEST ***************")
-      res
-          .status(200)
-          .json(res.game)
-  })
+    console.log(res)
+    
+    
+    let title = `Lakers vs ${res.game.away_team}`
+    let game = {...res.game, title}
+
+
+    res
+        .status(200)
+        .json(game)
+})
 
     
 /* async/await syntax for promises */
