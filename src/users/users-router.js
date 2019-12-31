@@ -10,7 +10,6 @@ const jsonBodyParser = express.json()
 usersRouter
     .route('/')
     .get(/* requireAuth,  */ (req, res, next) => {
-        console.log("************* GET ALL USERS ****************")
         UserService.getAllUsers(req.app.get('db'))
             .then(data => {
                 let page;
@@ -22,8 +21,6 @@ usersRouter
                 !req.query.range ? range = [0,9] : range = JSON.parse(req.query.range)
                 !req.query.sort ? sort = ['id', 'ASC'] : sort = JSON.parse(req.query.sort)
                 !req.query.filter ? filter = null : filter = JSON.parse(req.query.filter)
-
-                console.log("Page",page, "Range",range, "Sort",sort, "Filter",filter)
 
                 function isValidObject(objToTest) {
                     if (objToTest == null) return false;
@@ -152,7 +149,6 @@ usersRouter
                         .status(201)
                         .location(path.posix.join(req.originalUrl, `/tickets`))
                         .json({ authToken: token })
-                        /* .json(UserService.serializeUser(user)) */
                 })
             })
         })
@@ -163,7 +159,6 @@ usersRouter
 usersRouter
     .route('/')
     .delete(jsonBodyParser, (req, res, next) => {
-        console.log("************* DELETE MANY USERS REQUEST ***************")
 
         let filter = JSON.parse(req.query.filter)
 
@@ -195,22 +190,16 @@ usersRouter
 usersRouter
     .route('/:user_id')
     .put(jsonBodyParser, (req, res, next) => {
-        console.log("************* PUT USER REQUEST ***************")
         const { id, first_name, last_name, username, password, email, dob, phone_number, gender } = req.body
         const update = { id, first_name, last_name, username, password, email, dob, phone_number, gender }
-
-        console.log(update)
 
         for (const [key, value] of Object.entries(update))
             if (value == null) {
                 delete update[key]
             }
-        
-        console.log("UPDATE EQUALS", update)
 
         UserService.updateUserInfo(req.app.get('db'), update)
             .then(updates => {
-                console.log("Router Update", updates)
                 res
                     .status(200)
                     .json({ message: `User ${req.params.user_id} has been successfully updated.`})
@@ -221,7 +210,6 @@ usersRouter
 usersRouter
     .route('/:user_id')
     .delete((req, res, next) => {
-        console.log("************* DELETE USER REQUEST ***************")
 
         const userId = req.params.user_id
 

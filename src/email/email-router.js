@@ -46,11 +46,10 @@ emailRouter
             
             request
                 .then((result) => {
-                    console.log(result.body)
                     return res.send('{"message": "Email sent."}')
                 })
                 .catch((err) => {
-                    console.log(err.statusCode, err.Errors)
+                    console.error(err.statusCode, err.Errors)
                 })    
     })
 

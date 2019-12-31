@@ -8,7 +8,6 @@ let moment = require("moment");
 gamesRouter
   .route('/')
   .get((req, res, next) => {
-    console.log("************* GET ALL GAMES ****************")
     GamesService.getAllGames(req.app.get('db'))
       .then(games => {
         let data = games.map(game => {
@@ -31,8 +30,6 @@ gamesRouter
         !req.query.range ? range = [0,9] : range = JSON.parse(req.query.range)
         !req.query.sort ? sort = ['id', 'ASC'] : sort = JSON.parse(req.query.sort)
         !req.query.filter ? filter = null : filter = JSON.parse(req.query.filter)
-
-        console.log("Page",page, "Range",range, "Sort",sort, "Filter",filter)
 
         function isValidObject(objToTest) {
             if (objToTest == null) return false;
@@ -113,27 +110,19 @@ gamesRouter
 gamesRouter
   .route('/:game_id')
   .put(jsonBodyParser, (req, res, next) => {
-    console.log("************* PUT REQUEST ***************")
     const { id, local_date, local_time, game_note } = req.body
     const update = { id, local_date, local_time, game_note }
-
-    console.log(update)
 
     for (const [key, value] of Object.entries(update))
       if (value == null) {
         delete update[key]
       }
-    
-    console.log("UPDATE EQUALS", update)
 
     GamesService.updateGame(req.app.get('db'), update)
       .then(updates => {
-        console.log("Router Update", updates)
         res
           .status(200)
           .json(updates)
-          /* .location(path.posix.join(req.originalUrl, `/${review.id}`))
-          .json(ReviewsService.serializeReview(review)) */
       })
       .catch(next)
 })
@@ -142,14 +131,9 @@ gamesRouter
   .route('/:game_id')
   .all(checkGameExists)
   .get((req, res) => {
-    console.log("************* CHECK ALL GAMES REQUEST ***************")
-    console.log(res)
-    
     
     let title = `Lakers vs ${res.game.away_team}`
     let game = {...res.game, title}
-
-
     res
         .status(200)
         .json(game)

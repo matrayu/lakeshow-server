@@ -18,8 +18,6 @@ ticketsRouter
       !req.query.sort ? sort = ['id', 'ASC'] : sort = JSON.parse(req.query.sort)
       !req.query.filter ? filter = null : filter = JSON.parse(req.query.filter)
 
-      console.log("Page",page, "Range",range, "Sort",sort, "Filter",filter)
-
       function isValidObject(objToTest) {
           if (objToTest == null) return false;
           if ("undefined" == typeof(objToTest)) return false;
@@ -108,8 +106,6 @@ ticketsRouter
   
   const newTicket = { game_id: id, section, seat_row, seat, purchase_price_ea, list_price_ea, discount_available, singles_allowed }
 
-  console.log(newTicket)
-
   TicketsService.insertTicket(req.app.get('db'),newTicket)
     .then(ticket => {
         return res
@@ -121,7 +117,6 @@ ticketsRouter
 ticketsRouter
   .route('/:ticket_id')
   .put(jsonBodyParser, (req, res, next) => {
-  console.log("************* PUT REQUEST ***************")
   const { id, list_price_ea, stubhub_price_ea, discount_available, available } = req.body
   const update = { id, list_price_ea, stubhub_price_ea, discount_available, available }
 
@@ -129,12 +124,9 @@ ticketsRouter
     if (value == null) {
       delete update[key]
     }
-  
-  console.log("UPDATE EQUALS", update)
 
   TicketsService.updateListing(req.app.get('db'), update)
     .then(updates => {
-      console.log("Router Update", updates)
       res
         .status(200)
         .json(updates)
@@ -146,7 +138,6 @@ ticketsRouter
   .route('/:ticket_id')
   .all(checkTicketExists)
   .get((req, res) => {
-    console.log("************* CHECK ALL TIX REQUEST ***************")
     res
         .status(200)
         .json(res.ticket)

@@ -65,8 +65,6 @@ listingsRouter
       let range = JSON.parse(req.query.range);
       let sort = JSON.parse(req.query.sort)
 
-      console.log(page, range, sort)
-
       let sortBy = sort[0]
       let OrderBy = sort[1]
     
@@ -171,8 +169,6 @@ listingsRouter
         
         let listingOutput = listings.sort(compare).slice(range[0], range[1] + 1)
         let contentRange = `listings ${range[0]}-${range[1]}/${listings.length}`
-
-        console.log(listingOutput)
         
         res
           .set({
