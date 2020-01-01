@@ -7,99 +7,96 @@ const { requireAuth } = require('../middleware/jwt-auth')
 const usersRouter = express.Router()
 const jsonBodyParser = express.json()
 
-usersRouter
-    .route('/')
-    .get(/* requireAuth,  */ (req, res, next) => {
-        UserService.getAllUsers(req.app.get('db'))
-            .then(data => {
-                let page;
-                let range;
-                let sort;
-                let filter;
+usersRouter.get('/', /* requireAuth, */ (req, res, next) => {
+    UserService.getAllUsers(req.app.get('db'))
+        .then(data => {
+            let page;
+            let range;
+            let sort;
+            let filter;
 
-                !req.query.page ? page = 1 :  page = parseInt(req.query.page)
-                !req.query.range ? range = [0,9] : range = JSON.parse(req.query.range)
-                !req.query.sort ? sort = ['id', 'ASC'] : sort = JSON.parse(req.query.sort)
-                !req.query.filter ? filter = null : filter = JSON.parse(req.query.filter)
+            !req.query.page ? page = 1 :  page = parseInt(req.query.page)
+            !req.query.range ? range = [0,9] : range = JSON.parse(req.query.range)
+            !req.query.sort ? sort = ['id', 'ASC'] : sort = JSON.parse(req.query.sort)
+            !req.query.filter ? filter = null : filter = JSON.parse(req.query.filter)
 
-                function isValidObject(objToTest) {
-                    if (objToTest == null) return false;
-                    if ("undefined" == typeof(objToTest)) return false;
-                    if (Object.keys(objToTest).length === 0) return false;
-                    return true
+            function isValidObject(objToTest) {
+                if (objToTest == null) return false;
+                if ("undefined" == typeof(objToTest)) return false;
+                if (Object.keys(objToTest).length === 0) return false;
+                return true
+            }
+
+            let filteredList = []
+            if (isValidObject(filter)) {
+                filter.id.map(id => {
+                    filteredList.push(data.filter(d => d.id == id))
+                })
+                data = []
+                filteredList.map(d => {
+                    data.push(d[0])
+                })
+            }
+
+            const pageCount = Math.ceil(data.length / 10);
+            let sortBy = sort[0]
+            let OrderBy = sort[1]
+            let sorted = 0
+
+            if (!page) { page = 1;}
+
+            if (page > pageCount) {
+                page = pageCount
+            }
+
+            if(sortBy && OrderBy){
+                if(OrderBy === 'DESC') {
+                    sorted = -1
                 }
-
-                let filteredList = []
-                if (isValidObject(filter)) {
-                    filter.id.map(id => {
-                        filteredList.push(data.filter(d => d.id == id))
-                    })
-                    data = []
-                    filteredList.map(d => {
-                        data.push(d[0])
-                    })
+                else {
+                    sorted = 1
                 }
+            }
 
-                const pageCount = Math.ceil(data.length / 10);
-                let sortBy = sort[0]
-                let OrderBy = sort[1]
-                let sorted = 0
-
-                if (!page) { page = 1;}
-
-                if (page > pageCount) {
-                    page = pageCount
-                }
-
-                if(sortBy && OrderBy){
-                    if(OrderBy === 'DESC') {
-                        sorted = -1
-                    }
-                    else {
-                        sorted = 1
-                    }
-                }
-
-                let compare = (a, b) => {
-                    const sortA = a[sortBy];
-                    const sortB = b[sortBy];          
-                    
-                    let comparison = 0;
-                    if (sortA > sortB) {
-                        comparison = 1;
-                    } else if (sortA < sortB) {
-                        comparison = -1;
-                    }
-                    return comparison * sorted;
-                }
+            let compare = (a, b) => {
+                const sortA = a[sortBy];
+                const sortB = b[sortBy];          
                 
-                let dataOutput = data.sort(compare).slice(range[0], range[1] + 1)
-                let contentRange = `data ${range[0]}-${range[1]}/${data.length}`
-                res
-                    .set({
-                        'Access-Control-Expose-Headers': 'content-range, X-Total-Count',
-                        'content-range': contentRange,
-                        'X-Total-Count': data.length,
-                        'Access-Control-Allow-Headers': 'content-range',
-                    })
-                    .json({
-                        "pagination": {
-                            "page": page,
-                            "pageCount": pageCount,
-                        },
-                        "sort": {
-                            "field": sortBy,
-                            "order": OrderBy
-                        },
-                        "filter": {},
-                        data: dataOutput
-                    });
-            })
-            .catch(next)
+                let comparison = 0;
+                if (sortA > sortB) {
+                    comparison = 1;
+                } else if (sortA < sortB) {
+                    comparison = -1;
+                }
+                return comparison * sorted;
+            }
+            
+            let dataOutput = data.sort(compare).slice(range[0], range[1] + 1)
+            let contentRange = `data ${range[0]}-${range[1]}/${data.length}`
+            res
+                .set({
+                    'Access-Control-Expose-Headers': 'content-range, X-Total-Count',
+                    'content-range': contentRange,
+                    'X-Total-Count': data.length,
+                    'Access-Control-Allow-Headers': 'content-range',
+                })
+                .json({
+                    "pagination": {
+                        "page": page,
+                        "pageCount": pageCount,
+                    },
+                    "sort": {
+                        "field": sortBy,
+                        "order": OrderBy
+                    },
+                    "filter": {},
+                    data: dataOutput
+                });
+        })
+        .catch(next)
 })
 
-usersRouter
-    .post('/', jsonBodyParser, (req, res, next) => {
+usersRouter.post('/', /* requireAuth, */ jsonBodyParser, (req, res, next) => {
     const { password, username, first_name, last_name, dob, gender, email } = req.body
 
     for (const field of ['first_name', 'last_name', 'gender', 'dob', 'username', 'password', 'email'])
@@ -156,74 +153,59 @@ usersRouter
     .catch(next)
 })
 
-usersRouter
-    .route('/')
-    .delete(jsonBodyParser, (req, res, next) => {
+usersRouter.delete('/', /* requireAuth, */ jsonBodyParser, (req, res, next) => {
+    let filter = JSON.parse(req.query.filter)
 
-        let filter = JSON.parse(req.query.filter)
-
-        filter.id.map(id => {
-            UserService.deleteUser(req.app.get('db'), idss)
-            .then(updates => {
-                res
-                    .status(200)
-                    .json({ message: `User ${id} successfully deleted.`})
-            })
-            .catch(next)
+    filter.id.map(id => {
+        UserService.deleteUser(req.app.get('db'), idss)
+        .then(updates => {
+            res
+                .status(200)
+                .json({ message: `User ${id} successfully deleted.`})
         })
-        
+        .catch(next)
+    })  
 })
 
-usersRouter
-    .route('/:user_id')
-    .get(/* requireAuth,  */ (req, res, next) => {
-        UserService.getUserNameAndEmail(req.app.get('db'),req.params.user_id)
-            .then(user => {
-                res.json({
-                    first_name: user.first_name,
-                    email: user.email
-                })
+usersRouter.get('/:user_id', /* requireAuth, */ (req, res, next) => {
+    UserService.getUserNameAndEmail(req.app.get('db'),req.params.user_id)
+        .then(user => {
+            res.json({
+                first_name: user.first_name,
+                email: user.email
             })
-            .catch(next)
+        })
+        .catch(next)
 })
 
-usersRouter
-    .route('/:user_id')
-    .put(jsonBodyParser, (req, res, next) => {
-        const { id, first_name, last_name, username, password, email, dob, phone_number, gender } = req.body
-        const update = { id, first_name, last_name, username, password, email, dob, phone_number, gender }
+usersRouter.put('/:user_id', /* requireAuth, */ jsonBodyParser, (req, res, next) => {
+    const { id, first_name, last_name, username, password, email, dob, phone_number, gender } = req.body
+    const update = { id, first_name, last_name, username, password, email, dob, phone_number, gender }
 
-        for (const [key, value] of Object.entries(update))
-            if (value == null) {
-                delete update[key]
-            }
+    for (const [key, value] of Object.entries(update))
+        if (value == null) {
+            delete update[key]
+        }
 
-        UserService.updateUserInfo(req.app.get('db'), update)
-            .then(updates => {
-                res
-                    .status(200)
-                    .json({ message: `User ${req.params.user_id} has been successfully updated.`})
-            })
-            .catch(next)
+    UserService.updateUserInfo(req.app.get('db'), update)
+        .then(updates => {
+            res
+                .status(200)
+                .json({ message: `User ${req.params.user_id} has been successfully updated.`})
+        })
+        .catch(next)
 })
 
-usersRouter
-    .route('/:user_id')
-    .delete((req, res, next) => {
+usersRouter.delete('/:user_id', /* requireAuth, */ (req, res, next) => {
+    const userId = req.params.user_id
 
-        const userId = req.params.user_id
-
-        UserService.deleteUser(req.app.get('db'), userId)
-            .then(updates => {
-                res
-                    .status(200)
-                    .json({ message: `User ${req.params.user_id} has been successfully delete.`})
-            })
-            .catch(next)
+    UserService.deleteUser(req.app.get('db'), userId)
+        .then(updates => {
+            res
+                .status(200)
+                .json({ message: `User ${req.params.user_id} has been successfully delete.`})
+        })
+        .catch(next)
 })
-
-
-    
-
 
 module.exports = usersRouter
