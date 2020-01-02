@@ -20,12 +20,12 @@ TRUNCATE
   users
   RESTART IDENTITY CASCADE;
 
-INSERT INTO users (gender, first_name, last_name, username, password, email, dob, phone_number, visits)
+INSERT INTO users (gender, first_name, last_name, username, password, email, dob, phone_number, visits, admin)
 VALUES
-  ('male', 'Mike', 'Dello', 'mdello', 'Tester12!', 'mdello@aol.com','1980-05-04', '3103429876', 1),
-  ('male', 'Matt', 'Fried', 'matrayu1', 'Tester12#', 'mfried@aol.com','1980-08-03', '310344444', 1),
-  ('male', 'Fred', 'Banks', 'tester', 'Tester12#', 'fbanks@aol.com','1999-09-18', '4243258469', 1),
-  ('male', 'Matt', 'Friedberg',	'matrayu',	'Tester12#', 'northridge614@gmail.com',	'1979-08-03',null,1);
+  ('male', 'Mike', 'Dello', 'mdello', 'Tester12!', 'mdello@aol.com','1980-05-04', '3103429876', 1, 'false'),
+  ('male', 'Matt', 'Fried', 'matrayu1', 'Tester12#', 'mfried@aol.com','1980-08-03', '310344444', 1, 'false'),
+  ('male', 'Fred', 'Banks', 'tester', 'Tester12#', 'fbanks@aol.com','1999-09-18', '4243258469', 1, 'false'),
+  ('male', 'Matt', 'Friedberg',	'matrayu',	'Tester12#', 'northridge614@gmail.com',	'1979-08-03',null,1, 'true');
 
 INSERT INTO teams (team_name, logo)
 VALUES
