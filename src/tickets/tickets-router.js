@@ -25,9 +25,11 @@ ticketsRouter
           return true
       }
 
+      console.log(filter)
+
       let filteredList = []
       if (isValidObject(filter)) {
-          filter.id.map(id => {
+          filter.q.map(id => {
               filteredList.push(data.filter(d => d.id == id))
           })
           data = []

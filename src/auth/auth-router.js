@@ -1,6 +1,7 @@
 const express = require('express')
 const AuthService = require('./auth-service')
 const { requireAuth } = require('../middleware/jwt-auth')
+const cookieParser = require('cookie-parser')
 
 const authRouter = express.Router()
 const jsonBodyParser = express.json()
@@ -33,9 +34,16 @@ authRouter.post('/login', jsonBodyParser, (req, res, next) => {
                     }
                     const sub = dbUser.username
                     const payload = { user_id: dbUser.id }
+
+                    let randomNumber=Math.random().toString();
+                    randomNumber=randomNumber.substring(2,randomNumber.length);
+                    
+                    
                     res
+                        .cookie('authCookie',randomNumber, { maxAge: 900000, httpOnly: true })
                         .send({
-                            authToken: AuthService.createJwt(sub, payload)
+                            authToken: AuthService.createJwt(sub, payload),
+                            admin: dbUser.admin
                         })
                 })
         })
