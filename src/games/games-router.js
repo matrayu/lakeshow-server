@@ -83,24 +83,25 @@ gamesRouter.get('/', (req, res, next) => {
       let dataOutput = data.sort(compare).slice(range[0], range[1] + 1)
       let contentRange = `data ${range[0]}-${range[1]}/${data.length}`
       res
-          .set({
-              'Access-Control-Expose-Headers': 'content-range, X-Total-Count',
-              'content-range': contentRange,
-              'X-Total-Count': data.length,
-              'Access-Control-Allow-Headers': 'content-range',
-          })
-          .json({
-              "pagination": {
-                  "page": page,
-                  "pageCount": pageCount,
-              },
-              "sort": {
-                  "field": sortBy,
-                  "order": OrderBy
-              },
-              "filter": {},
-              data: dataOutput
-          });
+        .status(200)
+        .set({
+            'Access-Control-Expose-Headers': 'content-range, X-Total-Count',
+            'content-range': contentRange,
+            'X-Total-Count': data.length,
+            'Access-Control-Allow-Headers': 'content-range',
+        })
+        .json({
+            "pagination": {
+                "page": page,
+                "pageCount": pageCount,
+            },
+            "sort": {
+                "field": sortBy,
+                "order": OrderBy
+            },
+            "filter": {},
+            data: dataOutput
+        });
     })
     .catch(next)
 })
@@ -118,7 +119,7 @@ gamesRouter.put('/:game_id', jsonBodyParser, (req, res, next) => {
   GamesService.updateGame(req.app.get('db'), update)
     .then(updates => {
       res
-        .status(200)
+        .status(201)
         .json(updates)
     })
     .catch(next)

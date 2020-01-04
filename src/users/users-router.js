@@ -7,7 +7,7 @@ const { requireAuth } = require('../middleware/jwt-auth')
 const usersRouter = express.Router()
 const jsonBodyParser = express.json()
 
-usersRouter.get('/', /* requireAuth, */ (req, res, next) => {
+usersRouter.get('/', requireAuth, (req, res, next) => {
     UserService.getAllUsers(req.app.get('db'))
         .then(data => {
             let page;
@@ -74,6 +74,7 @@ usersRouter.get('/', /* requireAuth, */ (req, res, next) => {
             let dataOutput = data.sort(compare).slice(range[0], range[1] + 1)
             let contentRange = `data ${range[0]}-${range[1]}/${data.length}`
             res
+                .status(200)
                 .set({
                     'Access-Control-Expose-Headers': 'content-range, X-Total-Count',
                     'content-range': contentRange,
@@ -96,7 +97,7 @@ usersRouter.get('/', /* requireAuth, */ (req, res, next) => {
         .catch(next)
 })
 
-usersRouter.post('/', /* requireAuth, */ jsonBodyParser, (req, res, next) => {
+usersRouter.post('/', requireAuth, jsonBodyParser, (req, res, next) => {
     const { password, username, first_name, last_name, dob, gender, email } = req.body
 
     for (const field of ['first_name', 'last_name', 'gender', 'dob', 'username', 'password', 'email'])
@@ -153,7 +154,7 @@ usersRouter.post('/', /* requireAuth, */ jsonBodyParser, (req, res, next) => {
     .catch(next)
 })
 
-usersRouter.delete('/', /* requireAuth, */ jsonBodyParser, (req, res, next) => {
+usersRouter.delete('/', requireAuth, jsonBodyParser, (req, res, next) => {
     let filter = JSON.parse(req.query.filter)
 
     filter.id.map(id => {
@@ -167,18 +168,17 @@ usersRouter.delete('/', /* requireAuth, */ jsonBodyParser, (req, res, next) => {
     })  
 })
 
-usersRouter.get('/:user_id', /* requireAuth, */ (req, res, next) => {
+usersRouter.get('/:user_id', requireAuth, (req, res, next) => {
     UserService.getUserNameAndEmail(req.app.get('db'),req.params.user_id)
         .then(user => {
-            res.json({
-                first_name: user.first_name,
-                email: user.email
-            })
+            res
+                .status(200)
+                .json({ first_name: user.first_name,email: user.email })
         })
         .catch(next)
 })
 
-usersRouter.put('/:user_id', /* requireAuth, */ jsonBodyParser, (req, res, next) => {
+usersRouter.put('/:user_id', requireAuth, jsonBodyParser, (req, res, next) => {
     const { id, first_name, last_name, username, password, email, dob, phone_number, gender } = req.body
     const update = { id, first_name, last_name, username, password, email, dob, phone_number, gender }
 
@@ -196,7 +196,7 @@ usersRouter.put('/:user_id', /* requireAuth, */ jsonBodyParser, (req, res, next)
         .catch(next)
 })
 
-usersRouter.delete('/:user_id', /* requireAuth, */ (req, res, next) => {
+usersRouter.delete('/:user_id', requireAuth, (req, res, next) => {
     const userId = req.params.user_id
 
     UserService.deleteUser(req.app.get('db'), userId)

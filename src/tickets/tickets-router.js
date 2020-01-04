@@ -25,17 +25,18 @@ ticketsRouter
           return true
       }
 
-      console.log(filter)
+      let filteredList = []; // Variable to hold the filtered list before putting into state
 
-      let filteredList = []
-      if (isValidObject(filter)) {
-          filter.q.map(id => {
-              filteredList.push(data.filter(d => d.id == id))
-          })
-          data = []
-          filteredList.map(d => {
-              data.push(d[0])
-          })
+      if (isValidObject(filter) && Object.keys(filter).length != 0) {
+        let currentList = []
+        currentList = data; // Assign the original list to currentList
+        filteredList = currentList.filter(item => { // Use .filter() to determine which items should be displayedbased on the search terms
+            const lc = item.away_team.toLowerCase(); // change current item to lowercase
+            const filter2 = filter.away_team.toLowerCase(); // change search term to lowercase
+            return lc.includes(filter2) // check to see if the current list item includes the search term If it does, it will be added to newList. 
+        });
+
+        data = filteredList
       }
 
       const pageCount = Math.ceil(data.length / 10);
@@ -73,7 +74,9 @@ ticketsRouter
       
       let dataOutput = data.sort(compare).slice(range[0], range[1] + 1)
       let contentRange = `data ${range[0]}-${range[1]}/${data.length}`
+
       res
+          .status(200)
           .set({
               'Access-Control-Expose-Headers': 'content-range, X-Total-Count',
               'content-range': contentRange,
@@ -89,7 +92,7 @@ ticketsRouter
                   "field": sortBy,
                   "order": OrderBy
               },
-              "filter": {},
+              "filter": filteredList,
               data: dataOutput
           });
     })
@@ -130,7 +133,7 @@ ticketsRouter
   TicketsService.updateListing(req.app.get('db'), update)
     .then(updates => {
       res
-        .status(200)
+        .status(201)
         .json(updates)
     })
     .catch(next)
