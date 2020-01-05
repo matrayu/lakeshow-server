@@ -2,6 +2,8 @@ const express = require('express')
 const GamesService = require('./games-service')
 const gamesRouter = express.Router()
 const jsonBodyParser = express.json()
+const { requireAuth } = require('../middleware/jwt-auth')
+const checkAdminPrivledges = require('../middleware/admin-auth')
 
 let moment = require("moment");
 
@@ -106,10 +108,11 @@ gamesRouter.get('/', (req, res, next) => {
     .catch(next)
 })
 
-gamesRouter.put('/:game_id', jsonBodyParser, (req, res, next) => {
+gamesRouter.put('/:game_id', requireAuth, checkAdminPrivledges, jsonBodyParser, (req, res, next) => {
   const { local_date, local_time, game_note } = req.body
   let id = req.params.game_id
-  const update = { id, local_date, local_time, game_note }
+  let date_modified = new Date()
+  const update = { id, local_date, local_time, game_note, date_modified }
 
   for (const [key, value] of Object.entries(update))
     if (value == null) {

@@ -33,11 +33,13 @@ authRouter.post('/login', jsonBodyParser, (req, res, next) => {
                         })
                     }
                     const sub = dbUser.username
-                    const payload = { user_id: dbUser.id }
+                    const payload = { 
+                        user_id: dbUser.id,
+                        admin: dbUser.admin
+                    }
 
                     let randomNumber=Math.random().toString();
                     randomNumber=randomNumber.substring(2,randomNumber.length);
-                    
                     
                     res
                         .cookie('authCookie',randomNumber, { maxAge: 900000, httpOnly: true })

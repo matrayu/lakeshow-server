@@ -2,10 +2,12 @@ const express = require('express')
 const TicketsService = require('./tickets-service')
 const ticketsRouter = express.Router()
 const jsonBodyParser = express.json()
+const { requireAuth } = require('../middleware/jwt-auth')
+const checkAdminPrivledges = require('../middleware/admin-auth')
 
 ticketsRouter
   .route('/')
-  .get((req, res, next) => {
+  .get(requireAuth, checkAdminPrivledges, (req, res, next) => {
     TicketsService.getAllTickets(req.app.get('db'))
     .then(data => {
       let page;
@@ -100,7 +102,7 @@ ticketsRouter
 })
 
 ticketsRouter
-  .post('/', jsonBodyParser, (req, res, next) => {
+  .post('/', requireAuth, checkAdminPrivledges, jsonBodyParser, (req, res, next) => {
   const { id, section, seat_row, seat = [], purchase_price_ea, list_price_ea, discount_available, singles_allowed} = req.body
 
   for (const field of ['id', 'section', 'seat_row', 'purchase_price_ea', 'list_price_ea'])
@@ -121,9 +123,11 @@ ticketsRouter
 
 ticketsRouter
   .route('/:ticket_id')
-  .put(jsonBodyParser, (req, res, next) => {
+  .all(checkTicketExists)
+  .put(requireAuth, checkAdminPrivledges, jsonBodyParser, (req, res, next) => {
   const { id, list_price_ea, stubhub_price_ea, discount_available, available } = req.body
-  const update = { id, list_price_ea, stubhub_price_ea, discount_available, available }
+  let date_modified = new Date()
+  const update = { id, list_price_ea, stubhub_price_ea, discount_available, available, date_modified }
 
   for (const [key, value] of Object.entries(update))
     if (value == null) {
@@ -142,7 +146,7 @@ ticketsRouter
 ticketsRouter
   .route('/:ticket_id')
   .all(checkTicketExists)
-  .get((req, res) => {
+  .get(requireAuth, checkAdminPrivledges, (req, res) => {
     res
         .status(200)
         .json(res.ticket)
