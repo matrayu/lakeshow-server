@@ -8,6 +8,7 @@ const checkAdminPrivledges = require('../middleware/admin-auth')
 let moment = require("moment");
 
 gamesRouter.get('/', (req, res, next) => {
+  console.log("GET GAMES")
   GamesService.getAllGames(req.app.get('db'))
     .then(games => {
       let data = games.map(game => {
