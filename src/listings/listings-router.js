@@ -9,7 +9,7 @@ listingsRouter.get('/', (req, res, next) => {
 
       allListings.map(listing => {
         listings.push({
-          id: listing.listing_id,
+          id: listing.id,
           available: listing.available,
           qty: listing.quantity,
           prices: {
@@ -46,9 +46,7 @@ listingsRouter.get('/', (req, res, next) => {
           }
         })
       })
-      res
-        .status(200)
-        .json(listings);
+      res.status(200).json(listings);
     })
     .catch(next)
 })
@@ -58,7 +56,7 @@ listingsRouter.get('/:listing_id', checkListingExists, (req, res) => {
     let sl = res.listing
 
     let listing = {
-      id: sl.listing_id,
+      id: sl.id,
       available: sl.available,
       qty: sl.quantity,
       prices: {
@@ -94,9 +92,7 @@ listingsRouter.get('/:listing_id', checkListingExists, (req, res) => {
           awayLogo: sl.away_logo
       }
     }
-    res
-        .status(200)
-        .json(listing)
+    res.status(200).json(listing)
 })
 
     
