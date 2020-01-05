@@ -63,6 +63,14 @@ const TicketsService = {
             .into('products')
             .returning('*')
             .then(([ticket]) => ticket)
+    },
+
+    deleteTicket(db, ticketId) {
+        return db
+            .from('products')
+            .where('products.id', ticketId)
+            .del()
+            .then()
     }
 }
 
