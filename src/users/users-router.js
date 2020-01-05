@@ -102,7 +102,7 @@ usersRouter.get('/', requireAuth, checkAdminPrivledges, (req, res, next) => {
     .catch(next)
 })
 
-usersRouter.post('/', requireAuth, checkAdminPrivledges, jsonBodyParser, (req, res, next) => {
+usersRouter.post('/', jsonBodyParser, (req, res, next) => {
     const { password, username, first_name, last_name, dob, gender, email } = req.body
 
     for (const field of ['first_name', 'last_name', 'gender', 'dob', 'username', 'password', 'email'])
