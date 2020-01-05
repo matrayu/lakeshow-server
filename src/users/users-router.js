@@ -163,11 +163,13 @@ usersRouter.delete('/', requireAuth, checkAdminPrivledges, jsonBodyParser, (req,
     let filter = JSON.parse(req.query.filter)
 
     filter.id.map(id => {
-        return UserService.deleteUser(req.app.get('db'), idss)
+        return UserService.deleteUser(req.app.get('db'), id)
         .then(updates => {
-            return res
-                .status(200)
-                .json({ message: `User ${id} successfully deleted.`})
+            return res.status(200).json({ 
+                success: true,
+                status: 200,
+                message: `User ${id} successfully deleted.`
+            })
         })
         .catch(next)
     })  
@@ -212,9 +214,11 @@ usersRouter.delete('/:user_id', requireAuth, checkAdminPrivledges, (req, res, ne
 
     return UserService.deleteUser(req.app.get('db'), userId)
         .then(updates => {
-            return res
-                .status(200)
-                .json({ message: `User ${req.params.user_id} has been successfully delete.`})
+            return res.status(200).json({ 
+                success: true,
+                status: 200,
+                message: `User ${req.params.user_id} has been successfully delete.`
+            })
         })
         .catch(next)
 })
