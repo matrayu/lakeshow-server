@@ -105,7 +105,7 @@ ticketsRouter
   .post('/', requireAuth, checkAdminPrivledges, jsonBodyParser, (req, res, next) => {
   const { id, section, seat_row, seat = [], purchase_price_ea, list_price_ea, discount_available, singles_allowed} = req.body
 
-  for (const field of ['id', 'section', 'seat_row', 'purchase_price_ea', 'list_price_ea'])
+  for (const field of ['id', 'section', 'seat_row', 'purchase_price_ea', 'list_price_ea', 'stubhub_price_ea'])
       if (!req.body[field])
           return res.status(400).json({
               error: `Missing '${field}' in request body`
@@ -113,19 +113,52 @@ ticketsRouter
   
   const newTicket = { game_id: id, section, seat_row, seat, purchase_price_ea, list_price_ea, discount_available, singles_allowed }
 
-  TicketsService.insertTicket(req.app.get('db'),newTicket)
+  console.log(newTicket)
+
+  TicketsService.insertTicket(req.app.get('db'), newTicket)
     .then(ticket => {
-        return res
-            .status(201)
+      console.log(ticket)
+      return res.status(201).json({
+        success: true,
+        status: 201, 
+        message: `Ticket ${ticket.id} has successfully been created`
+      })
     })
     .catch(next)
+})
+
+ticketsRouter.delete('/', requireAuth, checkAdminPrivledges, jsonBodyParser, (req, res, next) => {
+  let filter = JSON.parse(req.query.filter)
+
+  let db = req.app.get('db')
+
+  filter.id.map(id => {
+    TicketsService.getById(db, id).then(ticket => {
+      if (!ticket) {
+        return res.status(404).json({
+          error: `One or more tickets do not exist`
+        })
+      }
+
+    TicketsService.deleteTicket(req.app.get('db'), id)
+      .then(updates => {
+          return res.status(200).json({ 
+              success: true,
+              status: 200,
+              message: `Tickets successfully deleted.`
+          })
+      })
+      .catch(next)
+    })  
+  })
 })
 
 ticketsRouter
   .route('/:ticket_id')
   .all(checkTicketExists)
   .put(requireAuth, checkAdminPrivledges, jsonBodyParser, (req, res, next) => {
-  const { id, list_price_ea, stubhub_price_ea, discount_available, available } = req.body
+  const { list_price_ea, stubhub_price_ea, discount_available, available } = req.body
+  let id  = req.params.ticket_id
   let date_modified = new Date()
   const update = { id, list_price_ea, stubhub_price_ea, discount_available, available, date_modified }
 
@@ -136,9 +169,11 @@ ticketsRouter
 
   TicketsService.updateListing(req.app.get('db'), update)
     .then(updates => {
-      res
-        .status(201)
-        .json(updates)
+      res.status(201).json({
+        success: true, 
+        status: 201,
+        message: `Ticket ${id} has been updated successfully`
+      })
     })
     .catch(next)
 })
@@ -147,9 +182,21 @@ ticketsRouter
   .route('/:ticket_id')
   .all(checkTicketExists)
   .get(requireAuth, checkAdminPrivledges, (req, res) => {
-    res
-        .status(200)
-        .json(res.ticket)
+    return res.status(200).json(res.ticket)
+})
+
+ticketsRouter.delete('/:ticket_id', requireAuth, checkAdminPrivledges, (req, res, next) => {
+  const id = req.params.ticket_id
+
+  return TicketsService.deleteTicket(req.app.get('db'), id)
+      .then(updates => {
+          return res.status(200).json({ 
+              success: true,
+              status: 200,
+              message: `Ticket ${id} has been successfully delete.`
+          })
+      })
+      .catch(next)
 })
 
     
