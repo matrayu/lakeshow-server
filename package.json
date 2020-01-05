@@ -1,6 +1,6 @@
 {
   "name": "lakeshow-server",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "NodeJS project for Lakeshow Tix app",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,6 @@
     "start": "node src/server.js",
     "predeploy": "npm audit && npm run migrate-production",
     "deploy": "git push heroku master",
-    "postdeploy": "cd seeds/production && cat seed.production.lakeshowtix_tables.sql | heroku pg:psql",
     "migrate": "postgrator --config postgrator-config.js",
     "migrate-production": "postgrator --config postgrator-production-config.js"
   },
