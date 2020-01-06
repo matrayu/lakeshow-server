@@ -55,20 +55,20 @@ forgotPasswordRouter.get('/reset/:temppass', (req, res, next) => {
                     error: `The temp link is no longer valid. Please try resetting your password again.`
                 })
             }
-            return ForgotPasswordService.checkTempPassValid(db, userEmail)
+            ForgotPasswordService.checkTempPassValid(db, userEmail)
             .then(hash => {
                 if (!hash) {
                     return res.status(400).json({
                         error: `The temp link is no longer valid. Please try resetting your password again`
                     })
                 }
-                res
+                return res
                     .status(201)
                     .location(`/reset-password`)
                     .json({ 
                         userEmail: userEmail,
                         tempPass: temppass
-                    })
+                     })
             })
         })
         .catch(next)
@@ -90,14 +90,14 @@ forgotPasswordRouter.post('/reset_password', jsonBodyParser, (req, res, next) =>
 
     UserService.hashPassword(password)
         .then(hashedPassword => {
-            return ForgotPasswordService.checkTempPassValid(db, email)
+            ForgotPasswordService.checkTempPassValid(db, email)
             .then(tempPass => {
                 if (!tempPass) {
                     return res.status(400).json({ error: `The temp link is no longer valid. Please try resetting your password again.` })
                 }
-                return ForgotPasswordService.clearTempPassword(db, email)
+                ForgotPasswordService.clearTempPassword(db, email)
                 .then(user => {
-                    return UserService.resetPassword(db, email, hashedPassword)
+                    UserService.resetPassword(db, email, hashedPassword)
                     .then(user => {
                         return res
                             .status(201)
