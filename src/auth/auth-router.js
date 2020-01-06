@@ -43,10 +43,7 @@ authRouter.post('/login', jsonBodyParser, (req, res, next) => {
                     
                     res
                         .cookie('authCookie',randomNumber, { maxAge: 900000, httpOnly: true })
-                        .send({
-                            authToken: AuthService.createJwt(sub, payload),
-                            admin: dbUser.admin
-                        })
+                        .send({ authToken: AuthService.createJwt(sub, payload) })
                 })
         })
     .catch(next)
@@ -55,9 +52,7 @@ authRouter.post('/login', jsonBodyParser, (req, res, next) => {
 authRouter.post('/refresh', requireAuth, (req, res) => {
     const sub = req.user.username
     const payload = { user_id: req.user.id }
-    res.send({
-        authToken: AuthService.createJwt(sub, payload)
-    })
+    res.send({ authToken: AuthService.createJwt(sub, payload) })
 })
 
 module.exports = authRouter
