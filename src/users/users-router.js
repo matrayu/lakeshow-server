@@ -117,21 +117,21 @@ usersRouter.post('/', jsonBodyParser, (req, res, next) => {
     if (passwordError)
             return res.status(400).json({ error: passwordError })
 
-    return UserService.hasUserWithUserName(db,username)
+    UserService.hasUserWithUserName(db,username)
     .then(hasUserWithUserName => {
         if (hasUserWithUserName) {
             return res.status(400).json({
                 error: `Username already taken`
             })
         }
-        return UserService.hasUserWithEmail(db, email)
+        UserService.hasUserWithEmail(db, email)
         .then(hasUserWithEmail => {
             if (hasUserWithEmail) {
                 return res.status(400).json({
                     error: `Email has already been registered`
                 }) 
             }    
-            return UserService.hashPassword(password)
+            UserService.hashPassword(password)
             .then(hashedPassword => {
                 const newUser = {
                     username,
@@ -143,10 +143,13 @@ usersRouter.post('/', jsonBodyParser, (req, res, next) => {
                     email,
                     date_created: 'now()'
                 }
-                return UserService.insertUser(db,newUser)
+                UserService.insertUser(db,newUser)
                 .then(user => {
                     const sub = username
-                    const payload = { user_id: user.id }
+                    const payload = { 
+                        user_id: user.id,
+                        admin: user.admin 
+                    }
                     const token = AuthService.createJwt(sub, payload)
                     return res
                         .status(201)
